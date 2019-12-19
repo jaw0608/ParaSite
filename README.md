@@ -9,5 +9,6 @@ ParaSite game repo.
 - ReactJS
 - jQuery
 - NodeJS
+- Express
 
 Authored By: Joe Wilson, Brianna Florio, Immanuel Almosara

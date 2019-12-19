@@ -1,5 +1,5 @@
 /*DEPENDENCIES */
-import React from 'react';
+import  React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,17 +16,19 @@ import Register from '../src/components/Register';
 import './App.css';
 import '../src/css/bootstrap.min.css';
 
-function App() {
-  return (
-    <div className="App">
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Login}/>
-          <Route path="/register" component={Register}/>
-        </Switch>
-      </Router>
-    </div>
-  );
+class App extends Component{
+  render() {
+    return (
+      <div className="App">
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Login} />
+            <Route path="/register" component={Register} />
+          </Switch>
+        </Router>
+      </div>
+    )
+  }
 }
 
 export default App;
