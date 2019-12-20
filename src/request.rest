@@ -1,11 +1,7 @@
-GET http://localhost:3000/users
+GET http://localhost:9000/users
 
 ###
 
-POST http://localhost:3000/users
-Content-Type: application/json
+POST http://localhost:9000/users
 
-{
-    "name": "Manny",
-    "password": "password"
-}
+#1888nycwell
