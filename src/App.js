@@ -9,6 +9,7 @@ import {
 /* COMPONENTS */
 import Login from '../src/components/Login';
 import Register from '../src/components/Register';
+import Menu from '../src/components/Menu';
 
 /* SVGS */
 
@@ -24,6 +25,7 @@ class App extends Component{
           <Switch>
             <Route exact path="/" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/menu" component={Menu}/>
           </Switch>
         </Router>
       </div>

@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5e002abee68d5ccdadc648b8"},"firstName":"Immanuel","lastName":"Almosara","email":"ialmosara@gmail.com","username":"ialmosara","password":"password","confirmPassword":"password"}
+{"_id":{"$oid":"5e002ba0e68d5ccdadc648b9"},"firstName":"Joe","lastName":"Wilson","email":"joseph.wilson@stonybrook.edu","username":"jaw0608","password":"password","confirmPassword":"password"}
+{"_id":{"$oid":"5e002bd0e68d5ccdadc648ba"},"firstName":"Brianna","lastName":"Florio","email":"brianna.florio@stonybrook.edu","username":"bflorio14","password":"password","confirmPassword":"password"}

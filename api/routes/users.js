@@ -17,14 +17,38 @@ MongoClient.connect('mongodb://localhost:27017/parasite-db', { useUnifiedTopolog
 
   const db = client.db('parasite-db')
 
+  /* POST users listing */
   router.post('/', cors(corsOptions), (req, res) => {
     //Need to check for duplicates
 
-    db.collection('users').insertOne(req.body, function (err, result) {
+    //Checks if the user exists in the database
+    db.collection('users').find({ email: req.body.email }).toArray(function (err, result) {
       if (err) throw err;
-
-      console.log(req.body)
+      if (!result.length) {
+        db.collection('users').insertOne(req.body, function (err, result) {
+          if (err) throw err;
+          console.log("Account successfully registered!")
+        })
+      } else {
+        res.status(400).send({msg: 'User already exists!'});
+      }
     })
+
+  });
+
+  /* GET users listing. */
+  router.get('/', cors(), function (req, res, next) {
+    res.send('respond with a resource');
+
+    db.collection('users').find({username: req.body.username, password: req.body.password}).toArray(function (err, result) {
+      if (err) throw err;
+      if (result.length) {
+        //Username and password match
+        
+      } else {
+        res.status(400).send({msg: "Bad credentials!"});
+      }
+    });
   });
 });
 
@@ -35,10 +59,7 @@ router.use(function (req, res, next) {
   next();
 });
 
-/* GET users listing. */
-router.get('/', cors(), function (req, res, next) {
-  res.send('respond with a resource');
-});
+
 
 
 
