@@ -7,8 +7,10 @@ ParaSite game repo.
 - Javascript
 - Bootstrap
 - ReactJS
-- jQuery
 - NodeJS
 - Express
+- MongoDB
 
-Authored By: Joe Wilson, Brianna Florio, Immanuel Almosara
+Authored By: Joesph Wilson (jaw0608), Brianna Florio (Bflorio14), Immanuel Almosara (ialmosara)
+
+

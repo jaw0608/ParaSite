@@ -10,23 +10,24 @@ const corsOptions = {
   origin: "http://localhost:3000"
 }
 
+app.options('http://localhost:3000/users', cors());
+
 MongoClient.connect('mongodb://localhost:27017/parasite-db', { useUnifiedTopology: true }, function (err, client) {
   if (err) throw err;
 
   const db = client.db('parasite-db')
-  
+
   router.post('/', cors(corsOptions), (req, res) => {
-    // console.log(req, res);
+    //Need to check for duplicates
+
     db.collection('users').insertOne(req.body, function (err, result) {
-    if (err) throw err;
-    
-    console.log("User successfully inserted")
-  })
-    console.log(req.body);
+      if (err) throw err;
+
+      console.log(req.body)
+    })
   });
 });
 
-app.options('http://localhost:3000/users', cors());
 
 router.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
