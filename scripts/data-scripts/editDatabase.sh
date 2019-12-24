@@ -8,18 +8,18 @@ if [ ! $1 ]; then
   exit 1
 fi
 
-operation = $1
-db = $2
-out_dir = $3
-if [ ! $out_dir]; then
+operation=$1
+db=$2
+out_dir=$3
+if [ -z $out_dir ]
+then
   out_dir="./dataDump"
 else
   mkdir -p $out_dir
 fi
 
-if [operation == 'import']; then
+if [ "$operation" = 'import' ]; then
   cd $out_dir
-
   for i in *.json; do
     mongoimport --db $db --collection ${i/.json} --file $i
   done
