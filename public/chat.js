@@ -3,10 +3,10 @@ var socketID;
 socket.on('id',function(id){ //on connection, socket will receive its socket.id
   socketID = id;
   console.log(socketID);
+  socket.emit('name',socketID); //send desired name to server.
 });
 
 var name = 'hello';
-socket.emit('name',name); //send desired name to server.
 socket.on('name',function(success){
   if(success){
     //name was successful
@@ -21,15 +21,15 @@ socket.emit('chat',"hi"); //test
 
 
 socket.on('chat',function(msg){ //whenever this socket receives a chat message.
-    //Show message somehow
+    console.log(msg);
 });
 
 //functions to call
 
 function whisper(playerName,message){
   data = {
-    'player':playerName,
-    'msg':message
+    'player': playerName,
+    'msg': message
   }
   socket.emit('whisper',data);
 }
