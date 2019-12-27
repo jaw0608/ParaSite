@@ -7,9 +7,9 @@ import {
 } from 'react-router-dom';
 
 /* COMPONENTS */
-import Login from '../src/components/Login';
-import Register from '../src/components/Register';
-import Menu from '../src/components/Menu';
+import Login from './components/Login';
+import Register from './components/Register';
+import Menu from './components/Menu';
 
 /* SVGS */
 
@@ -18,6 +18,14 @@ import './App.css';
 import '../src/css/bootstrap.min.css';
 
 class App extends Component{
+
+  constructor(props){
+    super(props);
+    this.state = {
+      loggedIn: false
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -25,7 +33,7 @@ class App extends Component{
           <Switch>
             <Route exact path="/" component={Login} />
             <Route path="/register" component={Register} />
-            <Route path="/menu" component={Menu}/>
+            <Route path="/menu" authComp={Menu} loggedIn={this.state.loggedIn}/>
           </Switch>
         </Router>
       </div>
