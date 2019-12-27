@@ -66,12 +66,12 @@ class Register extends Component {
 
                         <p>Password</p>
                         <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Password" name="password" onChange={this.changeHandler} />
+                            <input type="password" className="form-control" placeholder="Password" name="password" onChange={this.changeHandler} />
                         </div>
 
                         <p>Confirm Password</p>
                         <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Confirm Password" name="confirmPassword" onChange={this.changeHandler} />
+                            <input type="password" className="form-control" placeholder="Confirm Password" name="confirmPassword" onChange={this.changeHandler} />
                         </div>
 
                         <Button type="submit" className="pr-3" onClick={this.registerAccount}>Register</Button>

@@ -5,7 +5,3 @@ const PrivateRoute = (route, authComp, loggedIn) => {
       }}/>
     );
   }
-
-const PublicRoute = () => {
-    reut
-}

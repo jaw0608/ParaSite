@@ -50,10 +50,10 @@ class Login extends Component {
                         </div>
 
                         <div className="input-group mb-2">
-                            <div className="input-group prepend">
+                            <div className="input-group-prepend">
                                 <span className="input-group-text" id="passwordAddon">Password</span>
                             </div>
-                            <input type="text" className="form-control" name="password" placeholder="Password" aria-label="Password" aria-describedby="passwordAddon" onChange={this.changeHandler} />
+                            <input type="password" className="form-control" name="password" placeholder="Password" aria-label="Password" aria-describedby="passwordAddon" onChange={this.changeHandler} />
                         </div>
 
                         <Button className="btn btn-primary mr-2 md-3" type="submit" renderas={Link}>Log in</Button>

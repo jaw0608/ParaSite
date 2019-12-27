@@ -33,7 +33,7 @@ class App extends Component{
           <Switch>
             <Route exact path="/" component={Login} />
             <Route path="/register" component={Register} />
-            <Route path="/menu" authComp={Menu} loggedIn={this.state.loggedIn}/>
+            <Route path="/menu" component={Menu}/>
           </Switch>
         </Router>
       </div>
