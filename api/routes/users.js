@@ -1,14 +1,29 @@
 //Imports
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const crypto = require('crypto');
 const MongoClient = require('mongodb').MongoClient;
+const User = require('../models/Users');
 
+/* Router */
 const app = express();
 const router = express.Router();
 
+/* Crypto */
+const algorithm = "md5";
+
+/* CORS */
 const corsOptions = {
   origin: "http://localhost:3000"
 }
+
+mongoose.connect("mongodb+srv://ParaSiteAdmin:" + process.env.MONGO_ATLAS_PW + "@parasite-ccdoj.mongodb.net/test?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+mongoose.Promise = global.Promise;
 
 router.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -24,27 +39,47 @@ MongoClient.connect('mongodb://localhost:27017/parasite-db', { useUnifiedTopolog
 
   const db = client.db('parasite-db')
 
-  /* POST users listing */
+  /* POST register */
   router.post('/register', cors(corsOptions), (req, res) => {
     //Need to check for duplicates
-
     //Checks if the user exists in the database
-    db.collection('users').find({ email: req.body.email }).toArray(function (err, result) {
+    // console.log(req.body);
+    // var testing = User.find();
+    // console.log(testing)
+    db.collection('users').find({ email: req.body.email }).toArray(function(err, result) {
       if (err) throw err;
       if (!result.length) {
-        db.collection('users').insertOne(req.body, function (err, result) {
-          if (err) throw err;
-          console.log("Account successfully registered!")
+        //Saved user!
+        const user = new User({
+          _id: new mongoose.Types.ObjectId(),
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          username: req.body.username,
+          password: req.body.password
         })
+        user.save().then(result => {
+          console.log("Account successfully registered! ", result);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(400).send({ msg: 'User already exists!'});
+        });
+        res.status(201).json({
+          message: "Handling POST request to /register",
+          createdUser: user
+        });
       } else {
         res.status(400).send({ msg: 'User already exists!' });
       }
-    })
+    });
   });
 
-  /* GET users listing. */
+  /* POST login */
   router.post('/login', cors(corsOptions), function (req, res) {
-    db.collection('users').find({ $and: [{ username: req.body.username }, { password: req.body.password }] }).toArray(function (err, result) {
+    //Hash the password first before checking
+    console.log("REEEE")
+    db.collection('users').find({ $and: [{ username: req.body.username}, {password: req.body.password }] }).toArray(function (err, result) {
       if (err) throw err;
       if (result.length) {
         //Username and password match
@@ -55,8 +90,5 @@ MongoClient.connect('mongodb://localhost:27017/parasite-db', { useUnifiedTopolog
     });
   });
 });
-
-
-
 
 module.exports = router;
