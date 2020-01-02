@@ -1,0 +1,11 @@
+/* for regular chat messages */
+.chat {
+
+}
+.whisper{
+  font-style: italic;
+}
+.whisper_alert {
+  font-style: italic;
+  color: orange;
+}

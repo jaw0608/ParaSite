@@ -34,8 +34,12 @@ module.exports = function (io) {
       var myname = playerNames[socket.id];
       var rooms = Object.keys(socket.rooms);
       var msg = myname+": "+data.msg;
+      var d = {
+        "type":"chat",
+        "msg":msg
+      }
       if(rooms.includes(data.room))
-        io.to(data.room).emit('chat',msg);
+        io.to(data.room).emit('chat',d);
     });
 
     socket.on('whisper', function(data){ //upon receival of a private message send request
@@ -49,11 +53,19 @@ module.exports = function (io) {
       if (socket.id==s.id){
         //cant whisper to self.
       }
-      var msg = myname+" (whispering): "+data.msg;
+      var msg = myname+ " (whispering): "+data.msg;
       if(s && shareRoom(data.room,socket,s)){
         var alert = myname+ " is whispering to "+ data.player;
-        io.to(data.room).emit('chat',alert);
-        io.to(player.socketID).emit('chat',msg);
+        var d = {
+          "type":"whisper_alert",
+          "msg":alert
+        }
+        io.to(data.room).emit('chat',d);
+        d = {
+          "type":"whisper",
+          "msg":msg
+        }
+        io.to(player.socketID).emit('chat',d);
       } //check if players share rooms
     });
   });

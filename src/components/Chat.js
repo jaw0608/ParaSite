@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
+import '../css/chat.css'
 var socket;
+
 class Chat extends Component {
   constructor(){
     super();
@@ -16,7 +18,7 @@ class Chat extends Component {
           <div>
             <div id="log">
             {this.state.children.map((item,index) => (
-              <p key={index}>{item}</p>
+              <p key={index} className={item.type}>{item.msg}</p>
             ))}
             </div>
             <input type="text" id="send" onKeyDown={this.emitChatMsg}/>
@@ -27,6 +29,7 @@ class Chat extends Component {
       socket.on('chat',this.recvChatMsg);
       socket.on('id',this.connect);
       socket.on('name',this.validName);
+      socket.on('m',this.validName);
     }
 
     componentWillUnmount(){
@@ -57,7 +60,9 @@ class Chat extends Component {
           }
           socket.emit('chat',d);
         }
+        msg.target.value = "";
       }
+
     }
     recvChatMsg = (msg) => {
       var currentList= this.state.children;
