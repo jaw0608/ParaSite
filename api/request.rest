@@ -2,6 +2,6 @@ GET http://localhost:9000/users
 
 ###
 
-POST http://localhost:9000/users
+POST http://localhost:9000/users/login
 
 #1888nycwell

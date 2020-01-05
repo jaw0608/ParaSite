@@ -4,30 +4,28 @@ const User = require('../models/user');
 module.exports = {
     checkRegistration: async (req, res, next) => {
         try {
-            console.log(User);
-            console.log("email", req.email);
-            const exists = await User.count({ email: req.email }, function(err, count) {
-                if (!err) {
-                    if (count) {
-                        // return true;
-                        res.send(200).send("Approved!");
-                        return true;
-                    } else {
-                        // return false;
-                        res.send(400).send("Not approved!");
-                        return false;
-                    }
-                }
-            });
-            res.status(201).send(exists);
-            // res.status(200).send("Exists!");
+            const exists = await User.exists({ email: req.email });
+            if (!exists) {
+                return true;
+            } else {
+                return false;
+            };
         } catch (err) {
             next(err);
         }
     },
 
     checkLogin: async (req, res, next) => {
-        const exists = await User.exists({ username: req.username, password: req.password });
-        return (exists ? true : false);
+        try {
+            const exists = await User.exists( {$and: [{ username: req.username},{password: req.password }]});
+            // console.log
+            if (exists) {
+                return true;
+            } else {
+                return false;
+            };
+        } catch (err) {
+            next(err);
+        }
     }
 };
