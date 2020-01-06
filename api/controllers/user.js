@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 /* User method definitions */
 module.exports = {
@@ -17,10 +18,18 @@ module.exports = {
 
     checkLogin: async (req, res, next) => {
         try {
-            const exists = await User.exists( {$and: [{ username: req.body.username},{password: req.body.password }]} );
-            // console.log
+            const user = await User.findOne({ username: req.body.username});
+            console.log("Checking login");
+            console.log(user);
+            exists = true;
             if (exists) {
-                return true;
+                //If user exists
+                if (await bcrypt.compare(req.body.password, user.password)) {
+                    //If password entered matches hashed password on db
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             };

@@ -2,8 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const crypto = require('crypto');
-// const MongoClient = require('mongodb').MongoClient;
+const bcrypt = require('bcrypt');
 const UserModel = require('../models/user');
 const UserController = require('../controllers/user');
 
@@ -14,11 +13,14 @@ const router = express.Router();
 /* Crypto */
 const algorithm = "md5";
 
+
 /* CORS */
 const corsOptions = {
   origin: "http://localhost:3000"
 }
 
+
+/* Set router header */
 router.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Methods', 'POST');
@@ -41,7 +43,7 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
       lastName: req.body.lastName,
       email: req.body.email,
       username: req.body.username,
-      password: req.body.password
+      password: await bcrypt.hash(req.body.password, 10),
     });
     promise.then(user => {
       res.send("Successfully saved user!");
@@ -56,7 +58,6 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
 /* POST login */
 router.post('/login', cors(corsOptions), async (req, res, next) => {
   //Hash the password first before checking
-  console.log(process.env);
   let exists = await UserController.checkLogin(req, res, next);
   if (exists) {
     //If the user is registered in the database
