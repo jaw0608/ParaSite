@@ -27,7 +27,7 @@ class Register extends Component {
         //Should pull values once this is clicked
         e.preventDefault(); //Prevents page from refreshing
         console.log(this.state);
-        axios.post('http://localhost:9000/users/register', this.state)
+        axios.post('http://localhost:9000/user/register', this.state)
             .then(function (response) {
                 const user = JSON.parse(response.config.data);
                 console.log(user);

@@ -17,7 +17,7 @@ module.exports = {
 
     checkLogin: async (req, res, next) => {
         try {
-            const exists = await User.exists( {$and: [{ username: req.username},{password: req.password }]});
+            const exists = await User.exists( {$and: [{ username: req.body.username},{password: req.body.password }]} );
             // console.log
             if (exists) {
                 return true;

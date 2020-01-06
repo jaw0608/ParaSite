@@ -20,8 +20,8 @@ const corsOptions = {
 }
 
 router.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', '*');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'POST');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
   console.log('Request type: ', req.method);
@@ -51,33 +51,20 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
         res.send("Error");
       });
   }
+});
 
-  /* POST login */
-  router.post('/login', cors(corsOptions), async (req, res, next) => {
-    //Hash the password first before checking
-    // console.log(req.body); 
-    console.log("REE");
-    let exists = await UserController.checkLogin({$and: [{username: req.body.username}, {password: req.body.password}]}, res, next);
-    console.log(exists);
-    if (exists) {
-      //If the user is registered in the database
-      res.status(200).send("Successfully logged in!");
-    } else {
-      //User not found
-      res.status(404).send("User not found!");
-    }
-    // db.collection('users').find({ $and: [{ username: req.body.username }, { password: req.body.password }] }).toArray(function (err, result) {
-    //   if (err) {
-    //     console.log(err);
-    //   };
-    //   if (result.length) {
-    //     //UserModelname and password match
-    //     res.send(true);
-    //   } else {
-    //     res.status(400).send({ msg: "Bad credentials!" });
-    //   }
-    // });
-  });
+/* POST login */
+router.post('/login', cors(corsOptions), async (req, res, next) => {
+  //Hash the password first before checking
+  console.log(process.env);
+  let exists = await UserController.checkLogin(req, res, next);
+  if (exists) {
+    //If the user is registered in the database
+    res.status(200).send("Successfully logged in!");
+  } else {
+    //User not found
+    res.status(404).send("User not found!");
+  }
 });
 
 module.exports = router;

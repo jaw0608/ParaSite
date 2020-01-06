@@ -15,7 +15,7 @@ var app = express();
 app.options('http://localhost:3000/', cors());
 
 /* Mongoose */
-const uri = "mongodb+srv://admin:yv7mvTX5THj6X2S@parasite-ccdoj.mongodb.net/test?retryWrites=true&w=majority";
+const uri = "mongodb+srv://admin:yv7mvTX5THj6X2S@parasite-ccdoj.mongodb.net/parasite-db?retryWrites=true&w=majority";
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* Routes */
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

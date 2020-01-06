@@ -21,11 +21,11 @@ class Login extends Component {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    login = (e) => {
+    login = e => {
         let thisVar = this;
         e.preventDefault(); //prevents page from refreshing
         console.log(this.state);
-        axios.post('http://localhost:9000/users/login', this.state)
+        axios.post('http://localhost:9000/user/login', this.state)
             .then(function (response) {
                 //Redirect to menu
                 thisVar.props.history.push('/menu')
