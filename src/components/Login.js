@@ -58,6 +58,7 @@ class Login extends Component {
 
                         <Button className="btn btn-primary mr-2 md-3" type="submit" renderas={Link}>Log in</Button>
                         <Button href="/register" className="btn btn-primary md-3" type="submit" renderas={Link}>Register</Button>
+                        <Link to="/forgot"> Forgot? </Link>
 
                     </div>
                 </div>

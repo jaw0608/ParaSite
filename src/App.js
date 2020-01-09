@@ -10,6 +10,7 @@ import {
 import Login from './components/Login';
 import Register from './components/Register';
 import Menu from './components/Menu';
+import Forgot from './components/Forgot';
 
 /* SVGS */
 
@@ -34,6 +35,7 @@ class App extends Component{
             <Route exact path="/" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/menu" component={Menu}/>
+            <Route path="/forgot" component={Forgot}/>
           </Switch>
         </Router>
       </div>

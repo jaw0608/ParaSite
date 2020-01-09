@@ -1,3 +1,5 @@
+/* Routes related to authenticating the user */
+
 //Imports
 const express = require('express');
 const cors = require('cors');
@@ -5,6 +7,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/user');
 const UserController = require('../controllers/user');
+const nodemailer = require('nodemailer');
 
 /* Router */
 const app = express();
@@ -13,12 +16,26 @@ const router = express.Router();
 /* Crypto */
 const algorithm = "md5";
 
-
 /* CORS */
 const corsOptions = {
   origin: "http://localhost:3000"
 }
 
+/* Node Mailer */
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'parasitenoreply@gmail.com',
+    pass: 'yT01*Bt%Vhe#'
+  }
+});
+
+const mailOptions = {
+  from: 'parasitenoreply@gmail.com',
+  to: '',
+  subject: '',
+  text: ''
+};
 
 /* Set router header */
 router.use(function (req, res, next) {
@@ -64,6 +81,28 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
     res.status(200).send("Successfully logged in!");
   } else {
     //User not found
+    res.status(404).send("User not found!");
+  }
+});
+
+/* POST forgot */
+router.post('/forgot', cors(corsOptions), async (req, res, next) => {
+  //Send the email
+  let user = await UserController.forgotEmail(req, res, next);
+  if (user != {}) {
+    mailOptions.to = user.email;
+    mailOptions.subject = "Forgot Password";
+    mailOptions.text = "Here is a link to reset your account: https://becomingitalianwordbyword.typepad.com/.a/6a01053707c797970b0133f540e05f970b-pi";
+    transporter.sendMail(mailOptions, function(err, info) {
+      if (err) {
+        console.log("Error sending mail");
+        res.status(400).send("Internal server error");
+      } else {
+        console.log("Email sent:", info.response);
+        res.status(200).send("Email sent!")
+      }
+    });
+  } else {
     res.status(404).send("User not found!");
   }
 });
