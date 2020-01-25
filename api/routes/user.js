@@ -1,5 +1,8 @@
 /* Routes related to authenticating the user */
 
+require('dotenv').config();
+let refreshTokens = [];
+
 //Imports
 const express = require('express');
 const cors = require('cors');
@@ -8,6 +11,7 @@ const bcrypt = require('bcrypt');
 const UserModel = require('../models/user');
 const UserController = require('../controllers/user');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 /* Router */
 const app = express();
@@ -46,6 +50,22 @@ router.use(function (req, res, next) {
   console.log('Request type: ', req.method);
 });
 
+/* Middleware */
+//This function is used to protect routes, save this for menu etc
+function authenticateToken(req, res, next) {
+  console.log(req.body);
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; //Get the token 
+  if (token == null) return res.status(401).send('Error!');
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.status(403).send('Token is no longer valid!');
+    req.user = user;
+    next();
+  });
+}
+
+/* Routes */
 /* POST register */
 router.post('/register', cors(corsOptions), async (req, res, next) => {
   //Need to check for duplicates
@@ -75,10 +95,13 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
 /* POST login */
 router.post('/login', cors(corsOptions), async (req, res, next) => {
   //Hash the password first before checking
-  let exists = await UserController.checkLogin(req, res, next);
-  if (exists) {
+  let user = await UserController.checkLogin(req, res, next);
+  if (user != null) {
     //If the user is registered in the database
-    res.status(200).send("Successfully logged in!");
+    const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+    const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
+    refreshTokens.push(refreshToken);
+    res.json({accessToken: accessToken, refreshToken: refreshTokens});
   } else {
     //User not found
     res.status(404).send("User not found!");
@@ -90,9 +113,11 @@ router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   //Send the email
   let user = await UserController.forgotEmail(req, res, next);
   if (user != {}) {
+    console.log("req:", req.headers);
+    console.log("userid:", user._id);
     mailOptions.to = user.email;
     mailOptions.subject = "Forgot Password";
-    mailOptions.text = "Here is a link to reset your account: https://becomingitalianwordbyword.typepad.com/.a/6a01053707c797970b0133f540e05f970b-pi";
+    mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/?id=" + user._id;
     transporter.sendMail(mailOptions, function(err, info) {
       if (err) {
         console.log("Error sending mail");

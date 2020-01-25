@@ -24,12 +24,12 @@ module.exports = {
                 //If user exists
                 if (await bcrypt.compare(req.body.password, user.password)) {
                     //If password entered matches hashed password on db
-                    return true;
+                    return user;
                 } else {
-                    return false;
+                    return null;
                 }
             } else {
-                return false;
+                return null;
             };
         } catch (err) {
             next(err);
@@ -40,7 +40,6 @@ module.exports = {
         try {
             // Get the email from the user, subject and text
             let user = await User.findOne({ email: req.body.email });
-            console.log(user);
             return user;
         } catch (err) {
             next(err);

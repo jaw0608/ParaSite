@@ -2,6 +2,7 @@ GET http://localhost:9000/user/register
 
 ###
 
-OPTIONS http://localhost:9000/user/login
+
+POST http://localhost:9000/user/login
 
 #1888nycwell
