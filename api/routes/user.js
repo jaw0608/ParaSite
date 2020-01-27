@@ -101,7 +101,7 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
     const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
     const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
     refreshTokens.push(refreshToken);
-    res.json({accessToken: accessToken, refreshToken: refreshTokens});
+    res.json({ accessToken: accessToken, refreshToken: refreshTokens });
   } else {
     //User not found
     res.status(404).send("User not found!");
@@ -111,14 +111,14 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
 /* POST forgot */
 router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   //Send the email
-  let user = await UserController.forgotEmail(req, res, next);
+  let user = await UserController.getUser(req, res, next);
   if (user != {}) {
     console.log("req:", req.headers);
     console.log("userid:", user._id);
     mailOptions.to = user.email;
     mailOptions.subject = "Forgot Password";
-    mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/?id=" + user._id;
-    transporter.sendMail(mailOptions, function(err, info) {
+    mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/resetpassword?id=" + user._id;
+    transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
         console.log("Error sending mail");
         res.status(400).send("Internal server error");
@@ -132,4 +132,27 @@ router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   }
 });
 
+/* POST getID*/
+router.post('/getID', cors(corsOptions), async (req, res, next) => {
+  //Get the ID
+  let user = await UserController.getUser(req, res, next);
+  if (user != {}) {
+    res.status(200).send(user._id);
+  } else {
+    res.status(404).send("User not found!");
+  }
+});
+
+/* */
+router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
+  //Change the password
+  let user = await UserController.getUserByID(req, res, next);
+  if (user != {}) {
+    user.password = await bcrypt.hash(req.body.password, 10);
+    user.save();
+    res.status(200).send(user);
+  } else {
+    res.status(400).send("User not found!");
+  }
+});
 module.exports = router;

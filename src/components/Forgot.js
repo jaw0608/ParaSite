@@ -31,7 +31,7 @@ class Forgot extends Component {
         return (
             <form onSubmit={this.sendEmail}>
                 <h1> FORGOT PASSWORD </h1>
-                <p>Email</p>
+                <p>Email: </p>
                 <div className="input-group mb-3">
                     <input type="text" className="form-control" placeholder="Enter email here" name="email" onChange={this.changeHandler} />
                 </div>
