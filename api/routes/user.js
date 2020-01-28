@@ -111,7 +111,7 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
 /* POST forgot */
 router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   //Send the email
-  let user = await UserController.getUser(req, res, next);
+  let user = await UserController.getUserByEmail(req, res, next);
   if (user != {}) {
     console.log("req:", req.headers);
     console.log("userid:", user._id);
@@ -132,18 +132,18 @@ router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   }
 });
 
-/* POST getID*/
+/* POST getID */
 router.post('/getID', cors(corsOptions), async (req, res, next) => {
   //Get the ID
-  let user = await UserController.getUser(req, res, next);
+  let user = await UserController.getUserByEmail(req, res, next);
   if (user != {}) {
     res.status(200).send(user._id);
   } else {
     res.status(404).send("User not found!");
   }
 });
-
-/* */
+        
+/* POST resetpassword */
 router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
   //Change the password
   let user = await UserController.getUserByID(req, res, next);
@@ -155,4 +155,17 @@ router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
     res.status(400).send("User not found!");
   }
 });
+
+/* POST verifyID */
+router.post('/verifyID', cors(corsOptions), async (req, res, next) => {
+  //Verify the ID
+  let user = await UserController.getUserByID(req, res, next);
+  console.log("yerr",user);
+  if (user != undefined) {
+    res.status(200).send(true);
+  } else {
+    res.status(400).send(false);
+  }
+});
+
 module.exports = router;
