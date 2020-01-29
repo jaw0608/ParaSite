@@ -10,7 +10,7 @@ import {
 import Login from '../src/components/Login';
 import Register from '../src/components/Register';
 import Menu from '../src/components/Menu';
-import Chat from '../src/components/Chat';
+import Chat from '../src/components/ChatAsHooks';
 
 /* SVGS */
 

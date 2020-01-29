@@ -7,9 +7,10 @@ class Chat extends Component {
   constructor(){
     super();
     this.state={
-      endpoint:'http://localhost:9000/',
+      endpoint:`http://localhost:9000/`,
       children: [],
-      socketID: 0
+      socketID: 0,
+      room: "lobby"
     };
     socket = socketIOClient(this.state.endpoint);
   }
@@ -22,6 +23,7 @@ class Chat extends Component {
             ))}
             </div>
             <input type="text" id="send" onKeyDown={this.emitChatMsg}/>
+            <input type="button" id="find" onClick={this.findGame}/>
           </div>
         )
     }
@@ -30,6 +32,7 @@ class Chat extends Component {
       socket.on('id',this.connect);
       socket.on('name',this.validName);
       socket.on('m',this.validName);
+      socket.on("new room", this.newRoom)
     }
 
     componentWillUnmount(){
@@ -48,12 +51,12 @@ class Chat extends Component {
           d = {
             "player": match[2],
             "msg": match[3],
-            "room": "lobby"
+            "room": this.state.room
           }
           socket.emit('whisper',d);
         }
         else {
-          var room = 'lobby';
+          var room = this.state.room;
           d = {
             "room":room,
             "msg":msg.target.value
@@ -64,6 +67,11 @@ class Chat extends Component {
       }
 
     }
+
+    findGame = () => {
+      socket.emit('findGame');
+    }
+
     recvChatMsg = (msg) => {
       var currentList= this.state.children;
       currentList.push(msg);
@@ -77,14 +85,35 @@ class Chat extends Component {
       socket.emit('name',this.state.socketID);
     }
 
+    newRoom = (room)=> {
+      this.setState({"room":room})
+    }
+
     //if name request was successful
     validName = (valid) => {
-      if (valid){
-        //todo
+      var d;
+      if (valid.sucess){
+        d = {
+          "type":"success",
+          "msg":"Name "+valid.name +" chosen successfully"
+        }
       }
       else {
-        //todo
+        if (valid.reason==="TAKEN"){
+          d = {
+            "type":"fail",
+            "msg":"Name already chosen"
+          }
+        }
+        else {
+          d = {
+            "type":"fail",
+            "msg":"Invalid name"
+          }
+        }
+
       }
+      this.recvChatMsg(d);
     }
 }
 
