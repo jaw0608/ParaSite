@@ -7,7 +7,7 @@ class ResetPassword extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: this.props.location.search.split("=")[1],
+            id: this.props.location.pathname.split("/")[2],
             password: "",
             valid: false
         }
@@ -34,7 +34,7 @@ class ResetPassword extends Component {
     //componentDidMount check if ID is associated with a given email
     async componentDidMount() {
         let valid;
-        await axios.post('http://localhost:9000/user/verifyID', this.state)
+        await axios.get('http://localhost:9000/user/verifyID/' + this.props.location.pathname.split('/')[2])
             .then(function (response) {
                 console.log(response)
                 valid = true;
@@ -43,16 +43,14 @@ class ResetPassword extends Component {
                 console.log(error);
                 valid = false;
             });
-        console.log(this.state)
         this.setState({ valid })
-        console.log(this.state);
     }
 
     render() {
         return (this.state.valid ?
             <form onSubmit={this.sendEmail}>
                 <h1> Reset your Password: </h1>
-                <p>Email: </p>
+                <p>Password: </p>
                 <div className="input-group mb-3">
                     <input type="text" className="form-control" placeholder="Enter new password here" name="password" onChange={this.changeHandler} />
                 </div>

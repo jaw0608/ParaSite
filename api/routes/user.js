@@ -53,7 +53,6 @@ router.use(function (req, res, next) {
 /* Middleware */
 //This function is used to protect routes, save this for menu etc
 function authenticateToken(req, res, next) {
-  console.log(req.body);
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; //Get the token 
   if (token == null) return res.status(401).send('Error!');
@@ -113,11 +112,9 @@ router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   //Send the email
   let user = await UserController.getUserByEmail(req, res, next);
   if (user != {}) {
-    console.log("req:", req.headers);
-    console.log("userid:", user._id);
     mailOptions.to = user.email;
     mailOptions.subject = "Forgot Password";
-    mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/resetpassword?id=" + user._id;
+    mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/resetpassword/" + user._id;
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
         console.log("Error sending mail");
@@ -142,12 +139,12 @@ router.post('/getID', cors(corsOptions), async (req, res, next) => {
     res.status(404).send("User not found!");
   }
 });
-        
+
 /* POST resetpassword */
 router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
   //Change the password
   let user = await UserController.getUserByID(req, res, next);
-  if (user != {}) {
+  if (user != null) {
     user.password = await bcrypt.hash(req.body.password, 10);
     user.save();
     res.status(200).send(user);
@@ -156,11 +153,10 @@ router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
   }
 });
 
-/* POST verifyID */
-router.post('/verifyID', cors(corsOptions), async (req, res, next) => {
+/* GET verifyID */
+router.get('/verifyID/:id', cors(corsOptions), async (req, res, next) => {
   //Verify the ID
   let user = await UserController.getUserByID(req, res, next);
-  console.log("yerr",user);
   if (user != undefined) {
     res.status(200).send(true);
   } else {

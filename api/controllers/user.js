@@ -48,10 +48,11 @@ module.exports = {
 
     getUserByID: async (req, res, next) => {
         try {
-            let user = await User.findOne({_id: req.body.id});
+            let idVariable = (req.params.id == undefined ? req.body.id : req.params.id);
+            let user = await User.findOne({_id: idVariable});
             return user;
         } catch (err) {
             next(err);
         }
     }
-};
+};req.body.id
