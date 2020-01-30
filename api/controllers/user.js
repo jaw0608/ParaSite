@@ -50,9 +50,9 @@ module.exports = {
         try {
             let idVariable = (req.params.id == undefined ? req.body.id : req.params.id);
             let user = await User.findOne({_id: idVariable});
-            return user;
+            return user
         } catch (err) {
             next(err);
         }
     }
-};req.body.id
+};

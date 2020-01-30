@@ -64,6 +64,11 @@ function authenticateToken(req, res, next) {
   });
 }
 
+//Generates an access token
+function generateAccessToken(user) {
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m'});
+}
+
 /* Routes */
 /* POST register */
 router.post('/register', cors(corsOptions), async (req, res, next) => {
@@ -97,10 +102,10 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
   let user = await UserController.checkLogin(req, res, next);
   if (user != null) {
     //If the user is registered in the database
-    const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+    const accessToken = generateAccessToken(user.toJSON());
     const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
     refreshTokens.push(refreshToken);
-    res.json({ accessToken: accessToken, refreshToken: refreshTokens });
+    res.json({ accessToken: accessToken, refreshToken: refreshToken });
   } else {
     //User not found
     res.status(404).send("User not found!");
@@ -151,6 +156,19 @@ router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
   } else {
     res.status(400).send("User not found!");
   }
+});
+
+/* POST token */
+//This route is used for generating a new access token given the refresh token
+router.post('/token', async (req, res, next) => {
+  const refreshToken = req.body.refreshToken;
+  if (refreshToken == null) return res.sendStatus(401);
+  //Then check if the refresh token is found in the db
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    const accessToken = generateAccessToken({name: user.name})
+    res.json({ accessToken: accessToken});
+  })
 });
 
 /* GET verifyID */

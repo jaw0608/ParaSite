@@ -31,7 +31,7 @@ class ResetPassword extends Component {
             });
     }
 
-    //componentDidMount check if ID is associated with a given email
+    //Checks if ID is associated with a given email
     async componentDidMount() {
         let valid;
         await axios.get('http://localhost:9000/user/verifyID/' + this.props.location.pathname.split('/')[2])

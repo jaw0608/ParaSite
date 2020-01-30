@@ -1,11 +1,11 @@
 /* Dependencies */
 import React, { Component } from 'react';
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 
 class Login extends Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -27,8 +27,15 @@ class Login extends Component {
         console.log(this.state);
         axios.post('http://localhost:9000/user/login', this.state)
             .then(function (response) {
-                //Redirect to menu
-                thisVar.props.history.push('/menu')
+                //This returns the access and refresh token, now authenticate the token
+                //THEN redirect to menu page
+                axios.post('http://localhost:9000/user/token', response.data)
+                    .then(function (response) {
+                        thisVar.props.history.push('/menu');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
             }).catch(function (error) {
                 console.log(error);
             });
