@@ -1,4 +1,3 @@
 #!/bin/bash
 pushd ../../
-x-terminal-emulator -e "npm start"
-x-terminal-emulator -e "npm run devStart"
+xterm -e "npm start" & xterm -e "npm run devStart"
