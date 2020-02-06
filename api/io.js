@@ -1,5 +1,7 @@
 //for socket.io connections.
 module.exports = function(io) {
+  const randomFirstNames = ["Joe","Manny","Brianna","Lewis","Bob","John","Devin","Donald","Michael","Sasha","Rachel","Tori","Cat","Beck","Robbie","Hailey","Mel","Alex"];
+  const randomLastNames = ["Smith","Rodriguez","Clark","Williams","Brown","Jones","Walker","Price","Davis","Miller"];
   const async = require('async');
   games = {
     "lobby": {
@@ -18,38 +20,13 @@ module.exports = function(io) {
     socketToGame[socket.id] = "lobby" //player is in lobby, aka not in any game
     games["lobby"].connections++;
 
-    io.to(socket.id).emit('id', socket.id); //emit socket.id to socket
+    //io.to(socket.id).emit('id', socket.id); //emit socket.id to socket
+    randomName().then(function(name){
+        namePlayer(socket,name);
+    });
 
     socket.on('name', function(name) { //handle name request
-      game = socketToGame[socket.id] //get players current game or lack there of ("lobby")
-      var playersByName;
-      if (games[game] && (playersByName = games[game].playersByName)) { //if valid game and playersByName defined
-        if (Object.keys(playersByName).includes(name) == false) { //if name not chosen already
-
-          //update playersByName and playersBySocket for this game.
-          var playersBySocket = games[game].playersBySocket
-          var oldname = playersBySocket[socket.id];
-          delete playersByName[oldname];
-          playersByName[name] = socket.id
-          playersBySocket[socket.id] = name
-          games[game].playersBySocket = playersBySocket
-          games[game].playersByName = playersByName
-          d = {
-            "name": name,
-            "sucess": true,
-            "reason": null
-          }
-          io.to(socket.id).emit('name', d); //name added successfully
-        } else {
-          d = {
-            "name": name,
-            "sucess": false,
-            "reason": "TAKEN"
-          }
-          io.to(socket.id).emit('name', d); //name already used
-        }
-      }
-      console.log(games);
+      namePlayer(socket,name);
     });
 
     socket.on('findGame', function() {
@@ -62,7 +39,9 @@ module.exports = function(io) {
           socket.join(room);
           socketToGame[socket.id] = room;
           io.to(socket.id).emit('chat', d);
-          io.to(socket.id).emit('id', socket.id) //temporary renaming as socket.id when joining a room.
+          randomName().then(function(name){
+            namePlayer(socket,name);
+          });
           io.to(socket.id).emit('new room', room)
         });
       });
@@ -254,6 +233,46 @@ module.exports = function(io) {
     var player = {}
     //to do with Brianna for roles
     //games[game].players[socketid]=player
+  }
+
+  function namePlayer(socket,name){
+    game = socketToGame[socket.id] //get players current game or lack there of ("lobby")
+    var playersByName;
+    if (games[game] && (playersByName = games[game].playersByName)) { //if valid game and playersByName defined
+      if (Object.keys(playersByName).includes(name) == false) { //if name not chosen already
+
+        //update playersByName and playersBySocket for this game.
+        var playersBySocket = games[game].playersBySocket
+        var oldname = playersBySocket[socket.id];
+        delete playersByName[oldname];
+        playersByName[name] = socket.id
+        playersBySocket[socket.id] = name
+        games[game].playersBySocket = playersBySocket
+        games[game].playersByName = playersByName
+        d = {
+          "name": name,
+          "sucess": true,
+          "reason": null
+        }
+        io.to(socket.id).emit('name', d); //name added successfully
+      } else {
+        d = {
+          "name": name,
+          "sucess": false,
+          "reason": "TAKEN"
+        }
+        io.to(socket.id).emit('name', d); //name already used
+      }
+    }
+    console.log(games);
+  }
+
+  function randomName(){
+    return new Promise(function(resolve, reject) {
+      let i1 = Math.floor(Math.random() * randomFirstNames.length);
+      let i2 = Math.floor(Math.random() * randomLastNames.length);
+      resolve(randomFirstNames[i1]+" "+randomLastNames[i2]);
+    });
   }
 
   return module;

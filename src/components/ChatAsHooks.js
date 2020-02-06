@@ -11,16 +11,9 @@ const Chat = () => {
 
   const [messages, setMessages] = useState([]);
   const [room, setRoom] = useState("lobby");
-  const [socketID, setSocketID] = useState(0);
-
-  useEffect(() => {
-    if (socketID !== 0 && room != "temp")
-      socket.emit('name', socketID);
-  }, [room, socketID]); //emit on initial setup or when room changes
 
   useEffect(() => {
     socket.on('chat', recvChatMsg);
-    socket.on('id', setSocketID);
     socket.on('name', validName);
     socket.on("new room", newRoom);
 
