@@ -1,5 +1,6 @@
 /*DEPENDENCIES */
-import  React, { Component } from 'react';
+import React, { Component } from 'react';
+import { useRoutes } from 'hookrouter';
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,6 +19,18 @@ import ResetPassword from './components/ResetPassword';
 /* CSS */
 import './App.css';
 import '../src/css/bootstrap.min.css';
+
+// export default function App() {
+//   const routes = {
+//     "/": () => <Login />,
+//     "/register": () => <Register />,
+//     "/menu": () => <Menu />,
+//     "/forgot": () => <Forgot />,
+//     "resetPassword": () => <ResetPassword />
+//   }
+//   const routeResult = useRoutes(routes);
+//   return routeResult; 
+// }
 
 class App extends Component{
 

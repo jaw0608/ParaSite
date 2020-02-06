@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Menu extends Component {
-    render() {
-        return (
-            <div className="container">
-                Placeholder menu page
-        </div>
-        )
-    }
+export default function Menu() {
+    return (
+        <div className="container">
+            Placeholder menu page
+    </div>
+    )
 }
-
-export default Menu;

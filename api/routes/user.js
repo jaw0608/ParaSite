@@ -119,7 +119,7 @@ router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   if (user != {}) {
     mailOptions.to = user.email;
     mailOptions.subject = "Forgot Password";
-    mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/resetpassword/" + user._id;
+    mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/resetpassword?id=" + user._id;
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
         console.log("Error sending mail");
