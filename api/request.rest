@@ -1,8 +1,21 @@
 GET http://localhost:9000/user/register
 
 ###
-
-
+GET http://localhost:9000/user/posts
+content-type: application/json
+Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTEyYTBiMjA5MTQyNzIxYTZkOTJkNzAiLCJmaXJzdE5hbWUiOiJNYW5ueSIsImxhc3ROYW1lIjoiQWxtb3NhcmEiLCJlbWFpbCI6ImlhbG1vc2FyYUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImlhbG1vc2FyYSIsInBhc3N3b3JkIjoiJDJiJDEwJFUwZkVJSldwYVh3dVhrT2toV3FVdi5TcWRNeTRwTTU5eEdWcXZGWkVpempRaXZ4ampEa3ZXIiwiX192IjowLCJpYXQiOjE1ODEwMzM0MjYsImV4cCI6MTU4MTAzNTIyNn0.wf4dv1oAaO9pGPNun9-mqH9fLlj08Y9GTonQ6jWcEw4 "
+###
 POST http://localhost:9000/user/login
+content-type: application/json
 
+{
+    "username": "ialmosara",
+    "password": "password"
+}
+
+###
+POST http://localhost:9000/user/token
+content-type: application/json
+
+{"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTEyYTBiMjA5MTQyNzIxYTZkOTJkNzAiLCJmaXJzdE5hbWUiOiJNYW5ueSIsImxhc3ROYW1lIjoiQWxtb3NhcmEiLCJlbWFpbCI6ImlhbG1vc2FyYUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImlhbG1vc2FyYSIsInBhc3N3b3JkIjoiJDJiJDEwJFUwZkVJSldwYVh3dVhrT2toV3FVdi5TcWRNeTRwTTU5eEdWcXZGWkVpempRaXZ4ampEa3ZXIiwiX192IjowLCJpYXQiOjE1ODEwMzM0MjZ9.7Ao-mkMTPhsTMJF-L-OPnsq2_EiZqpBFyedQJSkJvyY" }
 #1888nycwell

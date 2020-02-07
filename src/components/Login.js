@@ -16,7 +16,7 @@ export default function Login() {
             .then(function (response) {
                 //This returns the access and refresh token, now authenticate the token
                 //THEN redirect to menu page
-                axios.post('http://localhost:9000/user/token', response.data)
+                axios.post('http://localhost:9000/user/posts', response.data)
                     .then(function (response) {
                         history.push('/menu');
                     })

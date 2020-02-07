@@ -1,7 +1,6 @@
 /* Routes related to authenticating the user */
 
 require('dotenv').config();
-let refreshTokens = [];
 
 //Imports
 const express = require('express');
@@ -9,6 +8,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/user');
+const TokenModel = require('../models/token');
 const UserController = require('../controllers/user');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
@@ -56,11 +56,11 @@ function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; //Get the token 
   if (token == null) return res.status(401).send('Error!');
-
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).send('Token is no longer valid!');
     req.user = user;
     next();
+    res.status(200).send("Success verifying token!");
   });
 }
 
@@ -104,12 +104,24 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
     //If the user is registered in the database
     const accessToken = generateAccessToken(user.toJSON());
     const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
-    refreshTokens.push(refreshToken);
+    
+    //Create refreshToken and append to Mongo
+    TokenModel.create({
+      _id: new mongoose.Types.ObjectId(),
+      refreshToken: refreshToken
+    });
+
     res.json({ accessToken: accessToken, refreshToken: refreshToken });
   } else {
     //User not found
     res.status(404).send("User not found!");
   }
+});
+
+/* DELETE logout */
+router.delete('/logout', async (req, res, next) => {
+  UserController.logout(req, res, next);
+  res.sendStatus(204);
 });
 
 /* POST forgot */
@@ -160,15 +172,21 @@ router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
 
 /* POST token */
 //This route is used for generating a new access token given the refresh token
-router.post('/token', async (req, res, next) => {
+router.post('/token', cors(corsOptions), async (req, res, next) => {
   const refreshToken = req.body.refreshToken;
   if (refreshToken == null) return res.sendStatus(401);
-  //Then check if the refresh token is found in the db
+  if (UserController.checkToken(req, res, next) === {}) return res.sendStatus(403); 
+
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     const accessToken = generateAccessToken({name: user.name})
     res.json({ accessToken: accessToken});
   })
+});
+
+/* POST posts*/
+router.get('/posts', cors(corsOptions), authenticateToken, async(req, res, next) => {
+  res.json( await UserController.checkToken(req, res, next));
 });
 
 /* GET verifyID */

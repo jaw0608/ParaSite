@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Token = require('../models/token');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
@@ -50,9 +51,28 @@ module.exports = {
         try {
             let idVariable = (req.params.id == undefined ? req.body.id : req.params.id);
             let user = await User.findOne({_id: idVariable});
-            return user
+            return user;
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    checkToken: async (req, res, next) => {
+        try {
+            let token = await Token.findOne({ refreshToken: req.body.refreshToken });
+            return token;
+        } catch(err) {
+            next(err);
+        }
+    },
+
+    logout: async (req, res, next) => {
+        try {
+            await Token.deleteMany({ refreshToken: req.body.refreshToken });
+            return true;
         } catch (err) {
             next(err);
         }
     }
+
 };
