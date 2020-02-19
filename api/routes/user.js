@@ -12,10 +12,14 @@ const TokenModel = require('../models/token');
 const UserController = require('../controllers/user');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 /* Router */
 const app = express();
 const router = express.Router();
+
+/* Cookies */
+app.use(cookieParser());
 
 /* Crypto */
 const algorithm = "md5";
@@ -110,7 +114,10 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
       _id: new mongoose.Types.ObjectId(),
       refreshToken: refreshToken
     });
-
+    
+    //Set the cookies before the response 
+    res.cookie('accessToken', accessToken);
+    res.cookie('refreshToken', refreshToken);
     res.json({ accessToken: accessToken, refreshToken: refreshToken });
   } else {
     //User not found
@@ -185,7 +192,7 @@ router.post('/token', cors(corsOptions), async (req, res, next) => {
 });
 
 /* POST posts*/
-router.get('/posts', cors(corsOptions), authenticateToken, async(req, res, next) => {
+router.post('/posts', cors(corsOptions), authenticateToken, async(req, res, next) => {
   res.json( await UserController.checkToken(req, res, next));
 });
 
