@@ -33,7 +33,7 @@ export default function Login() {
     return (
         <form onSubmit={(e) => login(e, { username: username, password: password })}>
             <div className="container login-container">
-                <h1 className="font-weight-bold logo"> ParaSite </h1>
+                <h1 className="font-weight-bold logo text-center"> ParaSite </h1>
                 <div className="col-12">
                     <h2> Log in </h2>
 
