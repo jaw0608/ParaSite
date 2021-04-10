@@ -1,28 +1,17 @@
 /* Dependencies */
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import { Form } from 'react-bootstrap';
 
-class Login extends Component {
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: "",
-            password: ""
-        }
-
-        this.login = this.login.bind(this);
-    }
-
-    changeHandler = e => {
-        this.setState({ [e.target.name]: e.target.value });
-    }
-
-    login = e => {
-        console.log(this.state);
-        axios.get('http://localhost:9000/users', this.state)
+    const login = (e) => {
+        e.preventDefault();
+        console.log(username, password);
+        axios.get('http://localhost:9000/users', {'username': username, 'password': password})
             .then(function (response) {
                 console.log(response);
             }).catch(function (error) {
@@ -30,36 +19,24 @@ class Login extends Component {
             });
     }
 
-    render() {
-        return (
-            <form onSubmit={this.login}>
-                <div className="container login-container">
-                    <h1 className="font-weight-bold logo"> ParaSite </h1>
-                    <div className="col-12">
-                        <h2> Log in </h2>
+    return (
+        <Form onSubmit={login}>
+            <h1 className="font-weight-bold titleText"> ParaSite </h1>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="text" placeholder="Username" onChange={e => setUsername(e.target.value)}/>
+            </Form.Group>
 
-                        <div className="input-group mb-2">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text" id="usernameAddon">Username</span>
-                            </div>
-                            <input type="text" className="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="usernameAddon" />
-                        </div>
-
-                        <div className="input-group mb-2">
-                            <div classname="input-group prepend">
-                                <span className="input-group-text" id="passwordAddon">Password</span>
-                            </div>
-                            <input type="text" className="form-control" name="password" placeholder="Password" aria-label="Password" aria-describedby="passwordAddon" />
-                        </div>
-
-                        <Button className="btn btn-primary mr-2 md-3" type="submit" renderAs={Link}>Log in</Button>
-                        <Button href="/register" className="btn btn-primary md-3" type="submit" renderAs={Link}>Register</Button>
-
-                    </div>
-                </div>
-            </form>
-        )
-    }
+            <Form.Group controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
+            </Form.Group>
+            <Button variant="primary" type="submit">
+                Log In
+            </Button>
+            <Button href='/register'> Register </Button>
+        </Form>
+    )
 }
 
 export default Login;
