@@ -15,6 +15,7 @@ import Menu from '../src/components/Menu';
 
 /* CSS */
 import './App.css';
+import '../src/index.css';
 import '../src/css/bootstrap.min.css';
 
 class App extends Component{
