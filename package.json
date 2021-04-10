@@ -5,13 +5,21 @@
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
+    "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+<<<<<<< HEAD
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
+=======
+    "axios": "^0.19.2",
+    "bcrypt": "^3.0.8",
+>>>>>>> f307d38ac6b5fc7031812ba7ade046e0ea81f77b
     "bootstrap": "^4.4.1",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+<<<<<<< HEAD
     "mongodb": "^3.4.1",
     "mongoose": "^5.12.3",
     "react": "^16.12.0",
@@ -19,6 +27,23 @@
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^4.0.3"
+=======
+    "hookrouter": "^1.2.3",
+    "jade": "^1.11.0",
+    "jquery": "^3.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.7",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.4.6",
+    "popper.js": "^1.16.1",
+    "pug": "^2.0.4",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.0.0",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.0"
+>>>>>>> f307d38ac6b5fc7031812ba7ade046e0ea81f77b
   },
   "scripts": {
     "start": "react-scripts start",

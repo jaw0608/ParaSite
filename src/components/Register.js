@@ -34,7 +34,7 @@ const Register = () => {
     }
 
     return (
-        <form onSubmit={registerAccount}>
+        <form onSubmit={e => registerAccount(e, { firstName: firstName, lastName: lastName, email: email, username: username, password: password, confirmPassword: confirmPassword })}>
             <div className="container">
                 <div className="col-12">
                     <h2 className="text-center logo mb-3"> Register </h2>

@@ -1,13 +1,27 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+const cors = require('cors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+let mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/user');
 
 var app = express();
+
+/* Enable CORS*/
+app.options('http://localhost:3000/', cors());
+
+/* Mongoose */
+const uri = "mongodb+srv://admin:yv7mvTX5THj6X2S@parasite-ccdoj.mongodb.net/parasite-db?retryWrites=true&w=majority";
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+mongoose.Promise = global.Promise;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* Routes */
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
