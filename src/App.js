@@ -1,6 +1,6 @@
 /*DEPENDENCIES */
 import React, { Component } from 'react';
-import { useRoutes } from 'hookrouter';
+import { useRoutes } from 'react-router-dom';
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,28 +12,15 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Menu from './components/Menu';
 import Forgot from './components/Forgot';
-import Options from './components/Options';
 import ResetPassword from './components/ResetPassword';
 
 /* SVGS */
 
 /* CSS */
-import './App.css';
+import './css/App.css';
 import '../src/index.css';
 import '../src/css/bootstrap.min.css';
 import './css/menu.css';
-
-// export default function App() {
-//   const routes = {
-//     "/": () => <Login />,
-//     "/register": () => <Register />,
-//     "/menu": () => <Menu />,
-//     "/forgot": () => <Forgot />,
-//     "resetPassword": () => <ResetPassword />
-//   }
-//   const routeResult = useRoutes(routes);
-//   return routeResult; 
-// }
 
 class App extends Component{
 
@@ -53,7 +40,6 @@ class App extends Component{
             <Route path="/register" component={Register} />
             <Route path="/menu" component={Menu}/>
             <Route path="/forgot" component={Forgot}/>
-            <Route path="/options" component={Options}/>
             <Route path="/resetPassword" component={ResetPassword}/>
           </Switch>
         </Router>

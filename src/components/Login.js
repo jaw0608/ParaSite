@@ -19,7 +19,7 @@ const Login = () => {
                 axios.post('http://localhost:9000/user/posts', response.data)
                     .then(function (response) {
                         console.log(response);
-                        history.push('/menu');
+                        // history.push('/menu');
                     })
                     .catch(function (error) {
                         console.log(error);
