@@ -47,11 +47,12 @@ const mailOptions = {
 
 /* Set router header */
 router.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'POST');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
   console.log('Request type: ', req.method);
+  // console.log(req);
 });
 
 /* Middleware */
@@ -103,9 +104,11 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
 /* POST login */
 router.post('/login', cors(corsOptions), async (req, res, next) => {
   //Hash the password first before checking
+  // console.log('reee')
   let user = await UserController.checkLogin(req, res, next);
   if (user != null) {
     //If the user is registered in the database
+    // console.log(user)
     const accessToken = generateAccessToken(user.toJSON());
     const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
     
@@ -121,6 +124,7 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
     res.json({ accessToken: accessToken, refreshToken: refreshToken });
   } else {
     //User not found
+    console.log('user not found')
     res.status(404).send("User not found!");
   }
 });
@@ -192,8 +196,14 @@ router.post('/token', cors(corsOptions), async (req, res, next) => {
 });
 
 /* POST posts*/
-router.post('/posts', cors(corsOptions), authenticateToken, async(req, res, next) => {
-  res.json( await UserController.checkToken(req, res, next));
+router.post('/posts', cors(corsOptions), authenticateToken, async (req, res, next) => {
+  let val = await UserController.checkToken(req, res, next)
+  try {
+    res.json(val);
+    return;
+  } catch (err) {
+    console.log('err');
+  } 
 });
 
 /* GET verifyID */

@@ -10,13 +10,17 @@ const Login = () => {
 
     const login = (e) => {
         e.preventDefault();
-        console.log(username, password);
-        axios.get('http://localhost:9000/users', {'username': username, 'password': password})
+        axios.post('http://localhost:9000/users/login', {'username': username, 'password': password})
             .then(function (response) {
                 //This returns the access and refresh token, now authenticate the token
                 //THEN redirect to menu page
+                let config = {
+                    headers: {
+                        authorization: 'Bearer ' + response.data.accessToken
+                    }
+                }
                 console.log(response.data)
-                axios.post('http://localhost:9000/user/posts', response.data)
+                axios.post('http://localhost:9000/users/posts', response.data, config)
                     .then(function (response) {
                         console.log(response);
                         // history.push('/menu');
