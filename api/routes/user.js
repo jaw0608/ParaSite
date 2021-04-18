@@ -71,6 +71,7 @@ function authenticateToken(req, res, next) {
 
 //Generates an access token
 function generateAccessToken(user) {
+  // console.log(process.env);
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m'});
 }
 
@@ -142,6 +143,7 @@ router.post('/forgot', cors(corsOptions), async (req, res, next) => {
   if (user != {}) {
     mailOptions.to = user.email;
     mailOptions.subject = "Forgot Password";
+    console.log(req.headers)
     mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/resetpassword?id=" + user._id;
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {

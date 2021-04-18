@@ -13,7 +13,7 @@ export default function ResetPassword() {
     const changePassword = (e, state) => {
         e.preventDefault(); //Prevents page from reloading;
 
-        axios.post('http://localhost:9000/user/resetpassword', state)
+        axios.post('http://localhost:9000/users/resetpassword', state)
             .then(function (response) {
                 console.log("Successfully changed password!");
             })
@@ -23,7 +23,7 @@ export default function ResetPassword() {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:9000/user/verifyID/' + id)
+        axios.get('http://localhost:9000/users/verifyID/' + id)
             .then(function (response) {
                 console.log(response)
                 setValid(true);
@@ -36,7 +36,7 @@ export default function ResetPassword() {
 
     return (valid ?
         <form onSubmit={e => changePassword(e, { id: id, password: password, valid: valid })}>
-            <h1> Reset your Password: </h1>
+            <h1 className='titleText'> Reset your Password: </h1>
             <p>Password: </p>
             <div className="input-group mb-3">
                 <input type="text" className="form-control" placeholder="Enter new password here" name="password" onChange={e => setPassword(e.target.value)} />
@@ -48,53 +48,3 @@ export default function ResetPassword() {
                 <Button className="" href="/"> Home </Button>
         </div>);
 }
-
-// class ResetPassword extends Component {
-
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             id: this.props.location.pathname.split("/")[2],
-//             password: "",
-//             valid: false
-//         }
-//         this.sendEmail = this.sendEmail.bind(this);
-//         this.changeHandler = this.changeHandler.bind(this);
-//     }
-
-//     changeHandler = e => {
-//         this.setState({ [e.target.name]: e.target.value });
-//     }
-
-//     sendEmail = e => {
-// e.preventDefault(); //Prevents page from reloading;
-
-// axios.post('http://localhost:9000/user/resetpassword', this.state)
-//     .then(function (response) {
-//         console.log("Successfully changed password!");
-//     })
-//     .catch(function (error) {
-//         console.log(error);
-//     });
-//     }
-
-//     //Checks if ID is associated with a given email
-//     async componentDidMount() {
-//         let valid;
-// await axios.get('http://localhost:9000/user/verifyID/' + this.props.location.pathname.split('/')[2])
-//     .then(function (response) {
-//         console.log(response)
-//         valid = true;
-//     })
-//     .catch(function (error) {
-//         console.log(error);
-//         valid = false;
-//     });
-// this.setState({ valid })
-//     }
-
-//     render() {
-//     }
-// }
-
-// export default ResetPassword;

@@ -1,10 +1,11 @@
 /* Dependencies */
 import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-import { Form } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 
 const Login = () => {
+    const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -23,7 +24,7 @@ const Login = () => {
                 axios.post('http://localhost:9000/users/posts', response.data, config)
                     .then(function (response) {
                         console.log(response);
-                        // history.push('/menu');
+                        history.push('/menu');
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -49,6 +50,7 @@ const Login = () => {
                 Log In
             </Button>
             <Button href='/register'> Register </Button>
+            <Button href='/forgot'> Forgot Password </Button>
         </Form>
     )
 }

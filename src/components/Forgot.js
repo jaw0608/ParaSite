@@ -7,7 +7,7 @@ export default function Forgot() {
 
     const sendEmail = (e, state) => {
         e.preventDefault(); //Prevents page from reloading;
-        axios.post('http://localhost:9000/user/forgot', state)
+        axios.post('http://localhost:9000/users/forgot', state)
             .then(function (response) {
                 console.log("Successfully sent email!");
             })
@@ -19,7 +19,7 @@ export default function Forgot() {
     return (
 
         <form onSubmit={e => sendEmail(e, {email: email})}>
-            <h1> FORGOT PASSWORD </h1>
+            <h1 className='titleText'> FORGOT PASSWORD </h1>
             <p>Email: </p>
             <div className="input-group mb-3">
                 <input type="text" className="form-control" placeholder="Enter email here" name="email" onChange={e => setEmail(e.target.value)} />

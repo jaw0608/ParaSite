@@ -137,19 +137,19 @@ const PlayTab = () => {
             </Row>
             <Row>
                 <Col xs={12} sm={6} lg={3}>
-                    <Button> Play Solo </Button>
+                    <Button href='/game'> Play Solo </Button>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim facilisis gravida neque convallis a cras.
                     </p>
                 </Col>
                 <Col xs={12} sm={6} lg={3}>
-                    <Button> Play with Party </Button>
+                    <Button href='/game'> Play with Party </Button>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec.
                     </p>
                 </Col>
                 <Col xs={12} sm={6} lg={3}>
-                    <Button> Play with Friends </Button>
+                    <Button href='/game'> Play with Friends </Button>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat id porta nibh venenatis.
                     </p>

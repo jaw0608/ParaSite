@@ -13,6 +13,7 @@ import Register from './components/Register';
 import Menu from './components/Menu';
 import Forgot from './components/Forgot';
 import ResetPassword from './components/ResetPassword';
+import Game from './components/Game';
 
 /* SVGS */
 
@@ -41,6 +42,7 @@ class App extends Component{
             <Route path="/menu" component={Menu}/>
             <Route path="/forgot" component={Forgot}/>
             <Route path="/resetPassword" component={ResetPassword}/>
+            <Route path='/game' component={Game}/>
           </Switch>
         </Router>
       </div>
