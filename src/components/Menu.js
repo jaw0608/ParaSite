@@ -27,48 +27,54 @@ const Menu = () => {
         <Container fluid className='menuPane'>
             <Tab.Container defaultActiveKey="profile">
                 <Row>
-                    <Col sm={2} md={2} lg={2} xl={2}>
-                        <Nav fill justify variant="tabs" defaultActiveKey='profile'>
-                            <Container>
-                                <Row className='menuTab' sm={12} md={12} lg={12} xl={12}>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey='profile'> Profile </Nav.Link>
-                                    </Nav.Item>
-                                </Row>
-                                <Row className='menuTab' sm={12} md={12} lg={12} xl={12}>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey='play'> Play </Nav.Link>
-                                    </Nav.Item>
-                                </Row>
-                                <Row className='menuTab' sm={12} md={12} lg={12} xl={12}>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey='options'> Options </Nav.Link>
-                                    </Nav.Item>
-                                </Row>
-                                <Row className='menuTab' sm={12} md={12} lg={12} xl={12}>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey='Log Out'> Log Out </Nav.Link>
-                                    </Nav.Item>
-                                </Row>
-                            </Container>
-                        </Nav>
+                    <Col></Col>
+                    <Col>
+                        <Row sm={12}>
+                            <Nav fill justify variant="tabs" defaultActiveKey='profile'>
+                                <Container>
+                                    <Row>
+                                        <Col className='menuTab' sm={3}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey='profile'> Profile </Nav.Link>
+                                            </Nav.Item>
+                                        </Col>
+                                        <Col className='menuTab' sm={3}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey='play'> Play </Nav.Link>
+                                            </Nav.Item>
+                                        </Col>
+                                        <Col className='menuTab' sm={3}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey='options'> Options </Nav.Link>
+                                            </Nav.Item>
+                                        </Col>
+                                        <Col className='menuTab' sm={3}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey='Log Out'> Log Out </Nav.Link>
+                                            </Nav.Item>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </Nav>
+                        </Row>
+                        <Row sm={12}>
+                            <Tab.Content>
+                                <Tab.Pane eventKey='profile'>
+                                    <ProfileTab state={state} setState={setState} accessories={fetchAccessories()}/>
+                                </Tab.Pane>
+                                <Tab.Pane eventKey='play'>
+                                    <PlayTab />
+                                </Tab.Pane>
+                                <Tab.Pane eventKey='options'>
+                                    <OptionsTab state={state} setState={handleProfilePic}/>
+                                </Tab.Pane>
+                                <Tab.Pane eventKey='logout'>
+                                    <Button> Log Out </Button>
+                                </Tab.Pane>
+                            </Tab.Content>
+                        </Row>
                     </Col>
-                    <Col m={10} md={10} lg={10} xl={10}>
-                        <Tab.Content>
-                            <Tab.Pane eventKey='profile'>
-                                <ProfileTab state={state} setState={setState} accessories={fetchAccessories()}/>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey='play'>
-                                <PlayTab />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey='options'>
-                                <OptionsTab state={state} setState={handleProfilePic}/>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey='logout'>
-                                <Button> Log Out </Button>
-                            </Tab.Pane>
-                        </Tab.Content>
-                    </Col>
+                    <Col></Col>
                 </Row>
             </Tab.Container>
         </Container>
@@ -154,7 +160,7 @@ const PlayTab = () => {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat id porta nibh venenatis.
                     </p>
                 </Col>
-                <Col xs={12} sm={6} lg={3}>
+                <Col xs={12} sm={6} lg={3} className='playColumn'>
                     <Container>
                         <Row>
                             <Col></Col>

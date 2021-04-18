@@ -20,8 +20,8 @@ import Game from './components/Game';
 /* CSS */
 import './css/App.css';
 import '../src/index.css';
-import '../src/css/bootstrap.min.css';
-import './css/menu.css';
+import '../src/css/bootstrap/bootstrap.min.css';
+import './css/Menu.css';
 
 class App extends Component{
 
