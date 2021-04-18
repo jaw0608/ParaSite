@@ -3,7 +3,7 @@
   src: url(../src/fonts/CFNightofTerrorPERSONAL-Reg.ttf);
 }
 
-h1 .titleText {
+.titleText {
   font-family: CFNightOfTerror;
   color: white;
 }

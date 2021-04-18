@@ -17,47 +17,32 @@ const Menu = () => {
     }
 
     return (
-        <>
-            {/* <Navbar bg="light" fixed="top" expanded={true}>
+            /* <Navbar bg="light" fixed="top" expanded={true}>
                 <Navbar.Brand>ParaSite</Navbar.Brand>
                 <Nav className='mr-auto'>
                     <Nav.Link href='/'>Home</Nav.Link>
                 </Nav>
-            </Navbar> */}
+            </Navbar> */
         <Container fluid className='menuPane'>
             <Tab.Container defaultActiveKey="profile">
-                <Row>
-                    <Col></Col>
-                    <Col>
-                        <Row sm={12}>
+                    <Row>
+                        <Col sm={12}>
                             <Nav fill justify variant="tabs" defaultActiveKey='profile'>
                                 <Container>
                                     <Row>
+                                        <MenuComponent eventKey={'profile'} tabName={'Profile'}/>
+                                        <MenuComponent eventKey={'play'} tabName={'Play'}/>
+                                        <MenuComponent eventKey={'options'} tabName={'Options'}/>
                                         <Col className='menuTab' sm={3}>
                                             <Nav.Item>
-                                                <Nav.Link eventKey='profile'> Profile </Nav.Link>
-                                            </Nav.Item>
-                                        </Col>
-                                        <Col className='menuTab' sm={3}>
-                                            <Nav.Item>
-                                                <Nav.Link eventKey='play'> Play </Nav.Link>
-                                            </Nav.Item>
-                                        </Col>
-                                        <Col className='menuTab' sm={3}>
-                                            <Nav.Item>
-                                                <Nav.Link eventKey='options'> Options </Nav.Link>
-                                            </Nav.Item>
-                                        </Col>
-                                        <Col className='menuTab' sm={3}>
-                                            <Nav.Item>
-                                                <Nav.Link eventKey='Log Out'> Log Out </Nav.Link>
+                                                <Nav.Link href='/'> Log Out </Nav.Link>
                                             </Nav.Item>
                                         </Col>
                                     </Row>
                                 </Container>
                             </Nav>
-                        </Row>
-                        <Row sm={12}>
+                        </Col>
+                        <Col sm={12}>
                             <Tab.Content>
                                 <Tab.Pane eventKey='profile'>
                                     <ProfileTab state={state} setState={setState} accessories={fetchAccessories()}/>
@@ -68,17 +53,24 @@ const Menu = () => {
                                 <Tab.Pane eventKey='options'>
                                     <OptionsTab state={state} setState={handleProfilePic}/>
                                 </Tab.Pane>
-                                <Tab.Pane eventKey='logout'>
+                                {/* <Tab.Pane eventKey='logout'>
                                     <Button> Log Out </Button>
-                                </Tab.Pane>
+                                </Tab.Pane> */}
                             </Tab.Content>
-                        </Row>
-                    </Col>
-                    <Col></Col>
-                </Row>
+                        </Col>
+                    </Row>
             </Tab.Container>
         </Container>
-        </>
+    )
+}
+
+const MenuComponent = ({tabName, eventKey}) => {
+    return (
+        <Col className='menuTab' sm={3}>
+            <Nav.Item>
+                <Nav.Link eventKey={eventKey}> {tabName} </Nav.Link>
+            </Nav.Item>
+        </Col>
     )
 }
 
@@ -86,24 +78,20 @@ const ProfileTab = ({state, setState, accessories}) => {
     return (
         <Container>
             <Row sm={12} md={12} lg={12} xl={12}>
-                <Col></Col>
-                <Col>
-                    <h1 className='titleText'>
+                <Col sm={{ span: 4, offset: 4 }}>
+                    <h1 className='titleText text-center'>
                         Profile
                     </h1>
                 </Col>
-                <Col></Col>
             </Row>
             <AvatarCustomizeRow accessory={accessories.heads} state={state} setState={setState}/>
             <AvatarCustomizeRow accessory={accessories.bodies} state={state} setState={setState}/>
             <AvatarCustomizeRow accessory={accessories.legs} state={state} setState={setState}/>
             <AvatarCustomizeRow accessory={accessories.shoes} state={state} setState={setState}/>
             <Row>
-                <Col></Col>
-                <Col>
+                <Col sm={{ span: 4, offset: 4}} className='text-center'>
                     <Button> Save Changes </Button>
                 </Col>
-                <Col></Col>
             </Row>
         </Container>
     )
@@ -116,15 +104,13 @@ const AvatarCustomizeRow = (accessory, state) => {
     }
     return (
         <Row>
-          <Col></Col>
-          <Col>
-            <BiLeftArrowCircle className='profileArrow' onClick={onClick}/>
+          <Col s={{ span: 3, offset: 3 }}>
+            <BiLeftArrowCircle className='profileArrow mx-auto d-block' onClick={onClick}/>
           </Col>
-          <Col> <Image src="https://via.placeholder.com/75"></Image> </Col>
-          <Col>
-            <BiRightArrowCircle className='profileArrow' onClick={onClick}/> 
+          <Col> <Image className='mx-auto d-block' src="https://via.placeholder.com/75"></Image> </Col>
+          <Col s={{ span: 3, offset: 3}}>
+            <BiRightArrowCircle className='profileArrow mx-auto d-block' onClick={onClick}/> 
           </Col> 
-          <Col></Col>
         </Row>
     )
 }
@@ -133,49 +119,49 @@ const PlayTab = () => {
     return (
         <Container>
             <Row sm={12} md={12} lg={12} xl={12}>
-                <Col></Col>
-                <Col>
-                    <h1 className='titleText'> 
+                <Col s={{ span: 4, offset: 4}}>
+                    <h1 className='titleText text-center'> 
                         Play 
                     </h1>
                 </Col>
-                <Col></Col>
             </Row>
             <Row>
-                <Col xs={12} sm={6} lg={3}>
-                    <Button href='/game'> Play Solo </Button>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim facilisis gravida neque convallis a cras.
-                    </p>
-                </Col>
-                <Col xs={12} sm={6} lg={3}>
-                    <Button href='/game'> Play with Party </Button>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec.
-                    </p>
-                </Col>
-                <Col xs={12} sm={6} lg={3}>
-                    <Button href='/game'> Play with Friends </Button>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat id porta nibh venenatis.
-                    </p>
-                </Col>
+                <PlayComponent buttonText={'Play Solo'} detailText={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim facilisis gravida neque convallis a cras.'} link={'/game'}/>
+                <PlayComponent buttonText={'Play with Party'} detailText={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec.'} link={'/game'}/>
+                <PlayComponent buttonText={'Play with Friends'} detailText={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat id porta nibh venenatis.'} link={'/game'}/>
                 <Col xs={12} sm={6} lg={3} className='playColumn'>
                     <Container>
                         <Row>
-                            <Col></Col>
-                            <Col>
-                                <h2 className='titleText'>Party</h2>
+                            <Col sm={{ span: 4, offset: 4}}>
+                                <h2 className='titleText text-center'>Party</h2>
                             </Col>
-                            <Col></Col>
                         </Row>
+                            <PartyEntry name={'Manny'}/>
+                            <PartyEntry name={'Joe'}/>
+                            <PartyEntry name={'Brianna'}/>
                         <Row>
-                            <div className='partyBox'></div>
+
                         </Row>
                     </Container>
                 </Col>
             </Row>
         </Container>
+    )
+}
+
+const PartyEntry = ({name}) => {
+    return(<p className='text-center partyEntry'>{name}</p>)
+}
+
+const PlayComponent = ({buttonText, detailText, link}) => {
+    console.log(buttonText, detailText, link)
+    return (
+        <Col className='text-center' xs={12} sm={6} lg={3}>
+            <Button href={link}> {buttonText} </Button>
+            <p>
+                {detailText}
+            </p>
+        </Col>
     )
 }
 
@@ -200,12 +186,10 @@ const OptionsTab = (handlers) => {
                 <Col sm={6} md={6} lg={6} xl={6}>
                     <Container>
                         <Row sm={12} md={12} lg={12} xl={12}>
-                            <Col></Col>
-                            <Col>
-                                <h1 className='titleText'>Options
+                            <Col sm={{ span: 4, offset: 4}}>
+                                <h1 className='titleText text-center'>Options
                                 </h1>
                             </Col>
-                            <Col></Col>
                         </Row>
                     </Container>
                     <Container className='profileData'>
