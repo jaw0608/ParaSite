@@ -22,6 +22,7 @@ import './css/App.css';
 import '../src/index.css';
 import '../src/css/bootstrap/bootstrap.min.css';
 import './css/Menu.css';
+import './css/Game.css';
 
 class App extends Component{
 
