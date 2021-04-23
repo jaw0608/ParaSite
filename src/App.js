@@ -14,6 +14,7 @@ import Menu from './components/Menu';
 import Forgot from './components/Forgot';
 import ResetPassword from './components/ResetPassword';
 import Game from './components/Game';
+import Chat from '../src/components/ChatAsHooks';
 
 /* SVGS */
 

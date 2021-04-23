@@ -24,6 +24,7 @@ mongoose.connect(uri, {
 });
 
 mongoose.Promise = global.Promise;
+var async = require('async');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
