@@ -46,10 +46,10 @@ const Login = () => {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" className='mr-2'>
                 Log In
             </Button>
-            <Button href='/register'> Register </Button>
+            <Button href='/register' className='mr-2'> Register </Button>
             <Button href='/forgot'> Forgot Password </Button>
         </Form>
     )

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, Tab, Row, Col, Container, Button, Image, Link } from 'react-bootstrap';
+import { Nav, Tab, Row, Col, Container, Button, Image } from 'react-bootstrap';
 import Avatar from 'react-avatar-edit';
 import { BiRightArrowCircle, BiLeftArrowCircle } from 'react-icons/bi';
 const Menu = () => {
@@ -17,12 +17,6 @@ const Menu = () => {
     }
 
     return (
-            /* <Navbar bg="light" fixed="top" expanded={true}>
-                <Navbar.Brand>ParaSite</Navbar.Brand>
-                <Nav className='mr-auto'>
-                    <Nav.Link href='/'>Home</Nav.Link>
-                </Nav>
-            </Navbar> */
     <Container fluid className='menuPane'>
         <Tab.Container defaultActiveKey="profile">
                 <Row>
@@ -107,7 +101,7 @@ const AvatarCustomizeRow = (accessory, state) => {
           <Col s={{ span: 3, offset: 3 }}>
             <BiLeftArrowCircle className='profileArrow mx-auto d-block' onClick={onClick}/>
           </Col>
-          <Col> <Image className='mx-auto d-block' src="https://via.placeholder.com/75"></Image> </Col>
+          <Col> <Image className='mx-auto d-block' src="https://via.placeholder.com/120"></Image> </Col>
           <Col s={{ span: 3, offset: 3}}>
             <BiRightArrowCircle className='profileArrow mx-auto d-block' onClick={onClick}/> 
           </Col> 
@@ -192,7 +186,7 @@ const OptionsTab = (handlers) => {
                             </Col>
                         </Row>
                     </Container>
-                    <Container className='profileData'>
+                    <Container>
                         <Row>Full Name: First Last <br /></Row>
                         <Row>Screen Name: placeholder<br /> </Row>
                         <Row>Email: email@email.com<br /> </Row>

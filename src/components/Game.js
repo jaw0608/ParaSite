@@ -1,7 +1,48 @@
-import React, { useState } from 'react';
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button, Container, Row, Col, Form } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { io } from 'socket.io-client'
 
 const Game = (players) => {
+    const [state, setState] = useState({message: '', name: ''});
+    const [chat, setChat] = useState([])
+    const socketRef = useRef();
+
+    useEffect(
+		() => {
+			socketRef.current = io.connect("http://localhost:9000")
+			socketRef.current.on("message", ({ name, message }) => {
+				setChat([ ...chat, { name, message } ])
+			})
+			return () => socketRef.current.disconnect()
+		},
+		[ chat ]
+	)
+
+    const changeMessage = (e) => {
+        // console.log(e.target.value)
+        console.log(state, e.target.value)
+        setState(prevState => {return {...prevState, message: [e.target.value]}})
+        e.persist();
+        return;
+    }
+
+    const sendMessage = (e) => {
+        // 
+        const { name, message } = state;
+        socketRef.current.emit("message", {name, message})
+        e.preventDefault();
+        setState({ message: '', name })
+    }
+
+    const renderChat = () => {
+        // Display all messages in order by recipients in room
+        console.log(chat);
+		return chat.map(({ recipient, message }, index) => (
+			<div key={index}>
+                {recipient}: <span>{message}</span>
+			</div>
+		))
+	}
     const getRows = (players) => {
         // 4 players per row
         let playerEntries = [];
@@ -43,6 +84,16 @@ const Game = (players) => {
                 <Button>Defend</Button>
                 <Button>Betray</Button>
             </Row>
+        <Form onSubmit={sendMessage}>
+            <Form.Label> Enter Message here </Form.Label>
+            <Form.Control type='text' placeholder='Type message here' onChange={e => changeMessage(e)} value={state.message}/>
+            <Button variant='primary' type='submit'>
+                Submit
+            </Button>
+            <div>
+                {renderChat()}
+            </div>
+        </Form>
         </Container>
     )
 }

@@ -1,15 +1,11 @@
 @font-face {
   font-family: CFNightOfTerror;
-  src: url(../src/fonts/CFNightofTerrorPERSONAL-Reg.ttf);
+  src: url(../../src/fonts/CFNightofTerrorPERSONAL-Reg.ttf);
 }
 
 .titleText {
   font-family: CFNightOfTerror;
   color: white;
-}
-
-.profileData {
-  height: 80%;
 }
 
 body {
@@ -26,8 +22,4 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-.menuPane {
-  background-color: grey;
 }

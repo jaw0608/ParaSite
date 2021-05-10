@@ -1,6 +1,5 @@
 /*DEPENDENCIES */
 import React, { Component } from 'react';
-import { useRoutes } from 'react-router-dom';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,13 +13,12 @@ import Menu from './components/Menu';
 import Forgot from './components/Forgot';
 import ResetPassword from './components/ResetPassword';
 import Game from './components/Game';
-import Chat from '../src/components/ChatAsHooks';
 
 /* SVGS */
 
 /* CSS */
 import './css/App.css';
-import '../src/index.css';
+import '../src/css/index.css';
 import '../src/css/bootstrap/bootstrap.min.css';
 import './css/Menu.css';
 import './css/Game.css';

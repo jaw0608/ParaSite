@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-import { Form, Link } from 'react-bootstrap';
 
 const Register = () => {
     // const [firstName, setFirstName] = useState('');

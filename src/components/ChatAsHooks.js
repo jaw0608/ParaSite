@@ -4,8 +4,8 @@ import React, {
 } from 'react';
 import socketIOClient from "socket.io-client";
 import '../css/chat.css'
-var endpoint = "http://localhost:9000"
-var socket = socketIOClient(endpoint);
+let endpoint = "http://localhost:9000"
+let socket = socketIOClient(endpoint);
 
 const Chat = () => {
 
@@ -27,9 +27,9 @@ const Chat = () => {
 
   function emitChatMsg(msg) {
     if (msg.key === 'Enter') {
-      var whisp = /^ *(\/w) ([\S]+) (.+)/
-      var match = whisp.exec(msg.target.value);
-      var d = {}
+      let whisp = /^ *(\/w) ([\S]+) (.+)/
+      let match = whisp.exec(msg.target.value);
+      let d = {}
       if (match && match[1] && match[2] && match[3]) { //is a whisper. 1 is /w, 2 is name, 3 is message
         d = {
           "player": match[2],
@@ -38,7 +38,7 @@ const Chat = () => {
         }
         socket.emit('whisper', d);
       } else {
-        var name = /^ *(\/n) ([\S]+)/
+        let name = /^ *(\/n) ([\S]+)/
         match = name.exec(msg.target.value);
         if (match && match[1] && match[2]) {
           socket.emit('name', match[2]);
@@ -66,7 +66,7 @@ const Chat = () => {
   }
 
   function validName(valid) {
-    var d;
+    let d;
     if (valid.sucess) {
       d = {
         "type": "success",
@@ -92,34 +92,15 @@ const Chat = () => {
   function findGame() {
     socket.emit('findGame');
   }
-  return ( <
-    React.Fragment >
-    <
-    div id = "log" > {
-      messages.map((item, index) => ( <
-        p key = {
-          index
-        }
-        className = {
-          item.type
-        } > {
-          item.msg
-        } < /p>
+  return ( <React.Fragment>
+    <div id = "log" > {
+      messages.map((item, index) => ( 
+        <p key = {index} className = {item.type}> {item.msg} </p>
       ))
-    } <
-    /div> <
-    input type = "text"
-    id = "send"
-    onKeyDown = {
-      emitChatMsg
-    }
-    /> <
-    button id = "find"
-    onClick = {
-      findGame
-    } > Find a game < /button> <
-    /React.Fragment>
+    } </div> <input type = "text" id = "send" onKeyDown = {emitChatMsg}/> 
+    <button id = "find" onClick = {findGame}> Find a game </button> 
+    </React.Fragment>
   );
 }
 
-export default Chat
+export default Chat;
