@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Nav, Tab, Row, Col, Container, Button, Image } from 'react-bootstrap';
 import Avatar from 'react-avatar-edit';
+import axios from 'axios';
 import { BiRightArrowCircle, BiLeftArrowCircle } from 'react-icons/bi';
 const Menu = () => {
-    const [state, setState] = useState({preview: null, src: null, head: null, body: null, legs: null, shoes: null });
+    // const user = useLocation();
+    const [state, setState] = useState({preview: null, src: null, head: null, body: null, legs: null, shoes: null, user: useLocation().state.user });
+    const [playerInfo, setPlayerInfo] = useState({ firstName: null, lastName: null, email: null, id: null })
+
+    // console.log(user);
 
     const handleProfilePic = (e) => {
         setState(prevState => {
@@ -47,9 +53,6 @@ const Menu = () => {
                             <Tab.Pane eventKey='options'>
                                 <OptionsTab state={state} setState={handleProfilePic}/>
                             </Tab.Pane>
-                            {/* <Tab.Pane eventKey='logout'>
-                                <Button> Log Out </Button>
-                            </Tab.Pane> */}
                         </Tab.Content>
                     </Col>
                 </Row>
@@ -148,7 +151,6 @@ const PartyEntry = ({name}) => {
 }
 
 const PlayComponent = ({buttonText, detailText, link}) => {
-    console.log(buttonText, detailText, link)
     return (
         <Col className='text-center' xs={12} sm={6} lg={3}>
             <Button href={link}> {buttonText} </Button>
@@ -162,6 +164,7 @@ const PlayComponent = ({buttonText, detailText, link}) => {
 const OptionsTab = (handlers) => {
     const [state, setState] = [handlers.state, handlers.setState];
 
+    // console.log(state);
     const onCrop = (preview) => {
         setState(prevState => {
             return {...prevState, preview: preview}
@@ -187,9 +190,9 @@ const OptionsTab = (handlers) => {
                         </Row>
                     </Container>
                     <Container>
-                        <Row>Full Name: First Last <br /></Row>
-                        <Row>Screen Name: placeholder<br /> </Row>
-                        <Row>Email: email@email.com<br /> </Row>
+                        <Row>Full Name: {state.user.firstName} {state.user.lastName} <br /></Row>
+                        <Row>Screen Name: {state.user.username} <br /> </Row>
+                        <Row>Email: {state.user.email} <br /> </Row>
                         <Row> 
                             <Button> Change Password </Button>
                             <Button> Save Changes </Button>
@@ -197,6 +200,7 @@ const OptionsTab = (handlers) => {
                     </Container>
                 </Col>
                 <Col sm={6} md={6} lg={6} xl={6}>
+                    <img src={state.preview} alt="Preview"/>
                     <Avatar
                         width={390}
                         height={295}

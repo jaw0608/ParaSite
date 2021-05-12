@@ -1,5 +1,5 @@
 /*DEPENDENCIES */
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -23,18 +23,10 @@ import '../src/css/bootstrap/bootstrap.min.css';
 import './css/Menu.css';
 import './css/Game.css';
 
-class App extends Component{
-
-  constructor(props){
-    super(props);
-    this.state = {
-      loggedIn: false
-    }
-  }
-
-  render() {
-    return (
-      <div className="App">
+const App = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  return(
+    <div className="App">
         <Router>
           <Switch>
             <Route exact path="/" component={Login} />
@@ -46,8 +38,7 @@ class App extends Component{
           </Switch>
         </Router>
       </div>
-    )
-  }
+  )
 }
 
 export default App;

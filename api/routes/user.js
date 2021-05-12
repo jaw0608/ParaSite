@@ -52,7 +52,6 @@ router.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
   console.log('Request type: ', req.method);
-  // console.log(req);
 });
 
 /* Middleware */
@@ -105,11 +104,9 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
 /* POST login */
 router.post('/login', cors(corsOptions), async (req, res, next) => {
   //Hash the password first before checking
-  // console.log('reee')
   let user = await UserController.checkLogin(req, res, next);
   if (user != null) {
     //If the user is registered in the database
-    // console.log(user)
     const accessToken = generateAccessToken(user.toJSON());
     const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
     
@@ -122,7 +119,7 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
     //Set the cookies before the response 
     res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    res.json({ accessToken: accessToken, refreshToken: refreshToken });
+    res.json({ accessToken: accessToken, refreshToken: refreshToken, user: user });
   } else {
     //User not found
     console.log('user not found')
@@ -218,5 +215,15 @@ router.get('/verifyID/:id', cors(corsOptions), async (req, res, next) => {
     res.status(400).send(false);
   }
 });
+
+/* GET userInfo */
+router.get('/getUserByUsername', cors(corsOptions), async (req, res, next) => {
+  let user = await UserController.getUserByUsername(req, res, next);
+  if (user != undefined) {
+    res.json(user);
+  } else {
+    res.status(400).send(user);
+  }
+})
 
 module.exports = router;

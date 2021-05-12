@@ -17,25 +17,34 @@ const Game = (players) => {
 		},
 		[ chat ]
 	)
-
+    
+    /**
+     * This will dynamically change the state message and is called whenever the message in the chat box changes
+     * @param {event} e 
+     */
     const changeMessage = (e) => {
-        // console.log(e.target.value)
         console.log(state, e.target.value)
         setState(prevState => {return {...prevState, message: [e.target.value]}})
         e.persist();
-        return;
     }
 
+    /**
+     * This will send the message when the user clicks send on the chat box
+     * @param {event} e 
+     */
     const sendMessage = (e) => {
-        // 
         const { name, message } = state;
         socketRef.current.emit("message", {name, message})
         e.preventDefault();
         setState({ message: '', name })
     }
 
+
+    /**
+     * returns chat object with messages loaded in order chronologically
+     * @returns {*} Chat container
+     */
     const renderChat = () => {
-        // Display all messages in order by recipients in room
         console.log(chat);
 		return chat.map(({ recipient, message }, index) => (
 			<div key={index}>
@@ -43,6 +52,12 @@ const Game = (players) => {
 			</div>
 		))
 	}
+
+    /**
+     * 
+     * @param {number} players Amount of players in game 
+     * @returns {*} returns container with player entries and rows
+     */
     const getRows = (players) => {
         // 4 players per row
         let playerEntries = [];
@@ -98,9 +113,13 @@ const Game = (players) => {
     )
 }
 
+/**
+ * 
+ * @param {dic} players list of player objects
+ * @returns Row of players in container
+ */
 const RowComponent = ({players}) => {
     console.log(players);
-
     return (
         <Row>
             {players.map(player => <Col className='room'>{player}</Col>)}

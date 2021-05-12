@@ -57,7 +57,11 @@ io.on('connection', (socket) => {
 io.on('error', onError);
 io.on('listening', onListening);
 
-/* Normalize a port into a number, string, or false */
+/**
+ * Normalizes a port into number, string or false
+ * @param {number} val 
+ * @returns Either number, string or false
+ */
 function normalizePort(val) {
   const port = parseInt(val, 10);
 
@@ -74,8 +78,10 @@ function normalizePort(val) {
   return false;
 }
 
-/* Event listener for HTTP server "error" event */
-
+/**
+ * Event listener for HTTP server "error" event
+ * @param {*} error Error 
+ */
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -103,7 +109,6 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string'

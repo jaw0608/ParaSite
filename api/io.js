@@ -31,7 +31,7 @@ module.exports = function(io) {
 
     socket.on('findGame', function() {
       matchMaker([socket.id]).then(function(room) {
-        var d = {
+        let d = {
           "type": "whisper_alert",
           "msg": `joined room ${room}`
         }
@@ -48,7 +48,7 @@ module.exports = function(io) {
     });
 
     socket.on('disconnect', function() { //disconnection
-      var game = socketToGame[socket.id]
+      let game = socketToGame[socket.id]
       if (!games[game]) return;
       if (games[game].playing == true) {
         //mark character as dead but uninteractable
@@ -58,12 +58,12 @@ module.exports = function(io) {
     });
 
     socket.on('chat', function(data) { //upon recieval of a message send request
-      var game = socketToGame[socket.id]
+      let game = socketToGame[socket.id]
       if (!games[game] || !games[game].playersBySocket) return
-      var myname = games[game].playersBySocket[socket.id]
-      var rooms = Object.keys(socket.rooms);
-      var msg = myname + ": " + data.msg;
-      var d = {
+      let myname = games[game].playersBySocket[socket.id]
+      let rooms = Object.keys(socket.rooms);
+      let msg = myname + ": " + data.msg;
+      let d = {
         "type": "chat",
         "msg": msg
       }
@@ -72,32 +72,32 @@ module.exports = function(io) {
     });
 
     socket.on('whisper', function(data) { //upon receival of a private message send request
-      var game = socketToGame[socket.id]
+      let game = socketToGame[socket.id]
       if (!games[game] || !games[game].playersBySocket) return
-      var myname = games[game].playersBySocket[socket.id]
+      let myname = games[game].playersBySocket[socket.id]
       if (!games[game].playersByName) return
-      var player = games[game].playersByName[data.player] || null;
+      let player = games[game].playersByName[data.player] || null;
       if (!player) {
-        var d = {
+        let d = {
           "type": "fail",
           "msg": `Player ${data.player} does not exist`
         }
         io.to(socket.id).emit('chat', d);
         return;
       }
-      var s = getSocket(player);
+      let s = getSocket(player);
       if (socket.id == s.id) {
-        var d = {
+        let d = {
           "type": "fail",
           "msg": "Why are you whispering to yourself? Lolz"
         }
         io.to(socket.id).emit('chat', d);
         return
       }
-      var msg = myname + " (whispering): " + data.msg;
+      let msg = myname + " (whispering): " + data.msg;
       if (s && shareRoom(data.room, socket, s)) {
-        var alert = myname + " is whispering to " + data.player;
-        var d = {
+        let alert = myname + " is whispering to " + data.player;
+        let d = {
           "type": "whisper_alert",
           "msg": alert
         }
@@ -113,10 +113,10 @@ module.exports = function(io) {
 
 
   function shareRoom(room, socket1, socket2) {
-    var rooms1 = socket1.rooms;
-    var rooms2 = socket2.rooms;
-    var ret1 = Object.keys(rooms1).includes(room);
-    var ret2 = Object.keys(rooms2).includes(room);
+    let rooms1 = socket1.rooms;
+    let rooms2 = socket2.rooms;
+    let ret1 = Object.keys(rooms1).includes(room);
+    let ret2 = Object.keys(rooms2).includes(room);
     return ret1 && ret2;
   }
 
@@ -131,7 +131,7 @@ module.exports = function(io) {
         return;
       }
       if (games[code] && games[code].connections < 12 - players.length) {
-        var done = 0;
+        let done = 0;
         for (let id of players) {
           leaveGame(id).then(function() {
             games[code].connections++;
@@ -153,8 +153,8 @@ module.exports = function(io) {
 
   function matchMaker(players) {
     return new Promise(function(resolve, reject) {
-      var shuf = shuffle(Object.keys(games));
-      var checked = 0;
+      let shuf = shuffle(Object.keys(games));
+      let checked = 0;
       for (let value of shuf) {
         joinGame(value, players).then(function(result) {
           if (result == true) {
@@ -180,15 +180,15 @@ module.exports = function(io) {
 
   function generateGameCode() {
     return new Promise(function(resolve, reject) {
-      var result = '';
-      var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-      for (var i = 8; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+      let result = '';
+      let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      for (let i = 8; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
       resolve(result);
     });
   }
 
   function shuffle(a) { //random shuffle of array, used in matchmaking
-    var j, x, i;
+    let j, x, i;
     for (i = a.length - 1; i > 0; i--) {
       j = Math.floor(Math.random() * (i + 1));
       x = a[i];
@@ -215,10 +215,10 @@ module.exports = function(io) {
 
   function leaveGame(socketid) {
     return new Promise(function(resolve, reject) {
-      var game = socketToGame[socketid];
+      let game = socketToGame[socketid];
       if (game && games[game] && games[game].playing == false) {
         games[game].connections -= 1;
-        var name = games[game].playersBySocket[socketid];
+        let name = games[game].playersBySocket[socketid];
         delete games[game].playersBySocket[socketid]
         delete games[game].playersByName[name]
         resolve();
@@ -230,20 +230,20 @@ module.exports = function(io) {
   }
 
   function makePlayer(game, socketid) {
-    var player = {}
+    let player = {}
     //to do with Brianna for roles
     //games[game].players[socketid]=player
   }
 
   function namePlayer(socket,name){
     game = socketToGame[socket.id] //get players current game or lack there of ("lobby")
-    var playersByName;
+    let playersByName;
     if (games[game] && (playersByName = games[game].playersByName)) { //if valid game and playersByName defined
       if (Object.keys(playersByName).includes(name) == false) { //if name not chosen already
 
         //update playersByName and playersBySocket for this game.
-        var playersBySocket = games[game].playersBySocket
-        var oldname = playersBySocket[socket.id];
+        let playersBySocket = games[game].playersBySocket
+        let oldname = playersBySocket[socket.id];
         delete playersByName[oldname];
         playersByName[name] = socket.id
         playersBySocket[socket.id] = name

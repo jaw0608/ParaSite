@@ -12,5 +12,3 @@ ParaSite game repo.
 - MongoDB
 
 Authored By: Joesph Wilson (jaw0608), Brianna Florio (Bflorio14), Immanuel Almosara (ialmosara)
-
-
