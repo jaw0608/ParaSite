@@ -36,7 +36,7 @@ const Register = () => {
         <form onSubmit={e => registerAccount(e, state)}>
             <div className="container">
                 <div className="col-12">
-                    <h2 className="text-center logo mb-3"> Register </h2>
+                    <h2 className="titleText text-center logo mb-3"> Register </h2>
 
                     <p>First Name</p>
                     <div className="input-group mb-3">
@@ -60,12 +60,12 @@ const Register = () => {
 
                     <p>Password</p>
                     <div className="input-group mb-3">
-                        <input type="text" className="form-control" placeholder="Password" name="password" onChange={e => changeHandler(e.target.name, e.target.value)} />
+                        <input type="password" className="form-control" placeholder="Password" name="password" onChange={e => changeHandler(e.target.name, e.target.value)} />
                     </div>
 
                     <p>Confirm Password</p>
                     <div className="input-group mb-3">
-                        <input type="text" className="form-control" placeholder="Confirm Password" name="confirmPassword" onChange={e => changeHandler(e.target.name, e.target.value)} />
+                        <input type="password" className="form-control" placeholder="Confirm Password" name="confirmPassword" onChange={e => changeHandler(e.target.name, e.target.value)} />
                     </div>
 
                     <Button type="submit" className="pr-3" onClick={registerAccount}>Register</Button>

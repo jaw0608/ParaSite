@@ -4,7 +4,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const tokenSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    refreshToken: String
+    refreshToken: {
+        type: String,
+        required: true
+    },
+    user: {
+        type: Object,
+        required: true
+    }
 });
 
 //Model

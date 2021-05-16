@@ -24,7 +24,7 @@ import './css/Menu.css';
 import './css/Game.css';
 
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
   return(
     <div className="App">
         <Router>

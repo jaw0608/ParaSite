@@ -8,9 +8,17 @@ const Login = () => {
     const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [user, setUser] = useState({});
 
+    /**
+     * This will take the username and password entered and check if it's a valid user
+     * If it is then it will log you in and redirect you to the menu page, if not it will throw a 404 error
+     * @param {event} e 
+     */
     const login = (e) => {
         e.preventDefault();
+        console.log(e, user)
+        console.log(setUser)
         axios.post('http://localhost:9000/users/login', {'username': username, 'password': password})
             .then(function (response) {
                 //This returns the access and refresh token, now authenticate the token
@@ -20,16 +28,16 @@ const Login = () => {
                     headers: {
                         authorization: 'Bearer ' + response.data.accessToken
                     }
-                }
+                } 
                 axios.post('http://localhost:9000/users/posts', response.data, config)
                     .then(function (response) {
-                        console.log(response);
+                        console.log(response, user);
                         history.push({pathname:'/menu', state: {user: user}});
                     })
                     .catch(function (error) { console.log(error); })
             }).catch(function (error) { console.log(error); });
     }
-
+ 
     return (
         <Form onSubmit={login}>
             <h1 className="font-weight-bold titleText"> ParaSite </h1>

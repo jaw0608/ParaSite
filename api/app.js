@@ -1,3 +1,4 @@
+/* Libraries */
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -5,17 +6,24 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const axios = require('axios');
 
+/* Routes */
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
 
+const joeio = require('./joeio');
+const ioHelpers = require('./ioHelpers');
+
+/* Initialize app */
 const app = express();
 
 /* Enable CORS*/
 app.options('http://localhost:3000/', cors());
 
 /* Mongoose */
-const uri = 'mongodb+srv://manny:CmbXqgGvNbdhvZX4@parasite.ccdoj.mongodb.net/ParaSite?retryWrites=true&w=majority';
+// const uri = 'mongodb+srv://manny:CmbXqgGvNbdhvZX4@parasite.ccdoj.mongodb.net/ParaSite?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://' + process.env.ATLAS_USER + ':' + process.env.ATLAS_PW + '@' + process.env.ATLAS_DB + '?retryWrites=true&w=majority';
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -39,7 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /* Socket.IO */
 /* Create HTTP server. */
 const httpServer = require('http').createServer(app);
-const port = normalizePort(process.env.PORT || '9000');
+const port = ioHelpers.normalizePort(process.env.PORT || '9000');
 app.set('port', port);
 const io = require('socket.io')(httpServer, {
   cors: {
@@ -48,74 +56,18 @@ const io = require('socket.io')(httpServer, {
   }
 });
 
+/* Listeners */
 io.on('connection', (socket) => {
   socket.on('message', ({ name, message}) => {
     io.emit('message', { name, message })
   })
+
+  socket.on('createGame', () => {
+    ioHelpers.createGame(socket);
+  })
 })
-
-io.on('error', onError);
-io.on('listening', onListening);
-
-/**
- * Normalizes a port into number, string or false
- * @param {number} val 
- * @returns Either number, string or false
- */
-function normalizePort(val) {
-  const port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
-
-/**
- * Event listener for HTTP server "error" event
- * @param {*} error Error 
- */
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  const bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+io.on('error', ioHelpers.onError);
+io.on('listening', ioHelpers.onListening);
 
 //socket.io connections
 httpServer.listen(9000, function (){

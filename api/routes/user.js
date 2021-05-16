@@ -90,6 +90,7 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
       email: req.body.email,
       username: req.body.username,
       password: await bcrypt.hash(req.body.password, 10),
+      profilePicture: null
     });
     promise.then(user => {
       res.send("Successfully saved user!");
@@ -113,7 +114,8 @@ router.post('/login', cors(corsOptions), async (req, res, next) => {
     //Create refreshToken and append to Mongo
     TokenModel.create({
       _id: new mongoose.Types.ObjectId(),
-      refreshToken: refreshToken
+      refreshToken: refreshToken,
+      user: user
     });
     
     //Set the cookies before the response 
