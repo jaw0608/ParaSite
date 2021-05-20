@@ -8,7 +8,6 @@ const Login = () => {
     const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState({});
 
     /**
      * This will take the username and password entered and check if it's a valid user
@@ -17,30 +16,31 @@ const Login = () => {
      */
     const login = (e) => {
         e.preventDefault();
-        console.log(e, user)
-        console.log(setUser)
         axios.post('http://localhost:9000/users/login', {'username': username, 'password': password})
             .then(function (response) {
                 //This returns the access and refresh token, now authenticate the token
                 //THEN redirect to menu page
+                console.log(response)
                 let user = response.data.user;
                 let config = {
                     headers: {
-                        authorization: 'Bearer ' + response.data.accessToken
+                        authorization: 'Bearer ' + response.data.accessToken,
                     }
                 } 
-                axios.post('http://localhost:9000/users/posts', response.data, config)
+                console.log(response.data, config)
+                axios.post('http://localhost:9000/users/posts', config)
                     .then(function (response) {
                         console.log(response, user);
                         history.push({pathname:'/menu', state: {user: user}});
                     })
+                    //AXIOS.JS LINE 87?
                     .catch(function (error) { console.log(error); })
             }).catch(function (error) { console.log(error); });
-    }
+        }
  
     return (
-        <Form onSubmit={login}>
-            <h1 className="font-weight-bold titleText"> ParaSite </h1>
+        <Form onSubmit={login} className='login-box p-4'>
+            <h1 className="font-weight-bold titleText text-center"> ParaSite </h1>
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" placeholder="Username" onChange={e => setUsername(e.target.value)}/>

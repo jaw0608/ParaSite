@@ -1,5 +1,5 @@
 /*DEPENDENCIES */
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -22,9 +22,9 @@ import '../src/css/index.css';
 import '../src/css/bootstrap/bootstrap.min.css';
 import './css/Menu.css';
 import './css/Game.css';
+import './css/Login.css';
 
 const App = () => {
-  const [user, setUser] = useState(null);
   return(
     <div className="App">
         <Router>

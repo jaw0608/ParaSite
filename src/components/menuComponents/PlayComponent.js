@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Modal, Button, Form } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 
-const socket = io('localhost:9000');
+const socket = io('localhost:9001');
 
-export const PlayTab = ({state, show}) => {
+export const PlayTab = ({state, setState}) => {
+
+    socket.on('gameCode', (gameCode) => {
+        console.log('gameCodsssssse', gameCode)
+        setState((prevState) => {
+            return {...prevState, gameCode: gameCode}
+        });
+    });
+
     return (
         <Container>
             <Row sm={12} md={12} lg={12} xl={12}>
@@ -59,6 +67,8 @@ const FormComponent = ({type, gameCode, func}) => {
         case 'Join':
             body = <><input type='text'/> <Button type='submit' variant='secondary'> {type} </Button></>;
             break;
+        default:
+            break;
     }
     return <Form onSubmit={func}>{body}</Form>
 }
@@ -71,6 +81,9 @@ const DetailComponent = ({gameCode, type, detailText}) => {
             break; 
         case 'Join':
             info = detailText;
+            break;
+        default:
+            break;
     }
     return <Modal.Body> {info} </Modal.Body>
 }

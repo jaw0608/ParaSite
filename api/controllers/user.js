@@ -33,6 +33,8 @@ module.exports = {
      */
     checkLogin: async (req, res, next) => {
         try {
+            // console.log('36')
+            // console.log(req.body);
             const user = await User.findOne({ username: req.body.username});
             if (user != {}) {
                 //If user exists
@@ -60,6 +62,7 @@ module.exports = {
     getUserByEmail: async (req, res, next) => {
         try {
             // Get the email from the user, subject and text
+            console.log(req.body)
             let user = await User.findOne({ email: req.body.email });
             return user;
         } catch (err) {
@@ -123,9 +126,11 @@ module.exports = {
      * @param {*} next Express next object
      * @returns User object if found
      */
-    getUserByUsername: async (req, res, next) => {
+    updateProfilePic: async (req, res, next) => {
         try {
-            let user = await User.findOne({ username: req.body.username });
+            let user = await User.findOne({ email: req.body.user.email });
+            user.profilePicture = req.body.profilePicture;
+            await user.save();
             return user;
         } catch(err) {
             next(err);

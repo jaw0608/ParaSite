@@ -9,23 +9,9 @@ import { PlayTab } from './menuComponents/PlayComponent';
 import { ProfileTab } from './menuComponents/ProfileComponent';
 import { OptionsTab } from './menuComponents/OptionComponent';
 
-const socket = io('localhost:9000');
 
 const Menu = () => {
-    const [state, setState] = useState({preview: null, src: null, head: null, body: null, legs: null, shoes: null, user: useLocation().state.user, show: false, gameCode: '' });
-
-    socket.on('gameCode', (gameCode) => {
-        setState((prevState) => {
-            return {...prevState, gameCode: gameCode}
-        });
-    });
-
-    const handleProfilePic = (e) => {
-        console.log(e)
-        setState(prevState => {
-            return {...prevState, preview: e}
-        })
-    }
+    const [state, setState] = useState({profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, user: useLocation().state.user, show: false, gameCode: '' });
 
     const fetchAccessories = () => {
         // FETCH IMAGE DATA FROM DB AND PUSH INTO DICTIONARY
@@ -60,7 +46,7 @@ const Menu = () => {
                                 <ProfileTab state={state} setState={setState} accessories={fetchAccessories()}/>
                             </Tab.Pane>
                             <Tab.Pane eventKey='play'>
-                                <PlayTab state={state}/>
+                                <PlayTab state={state} setState={setState}/>
                             </Tab.Pane>
                             <Tab.Pane eventKey='options'>
                                 <OptionsTab state={state} setState={setState}/>

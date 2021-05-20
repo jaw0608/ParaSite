@@ -4,30 +4,20 @@ require('dotenv').config();
 
 //Imports
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 const UserModel = require('../models/user');
 const TokenModel = require('../models/token');
 const UserController = require('../controllers/user');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 
 /* Router */
-const app = express();
 const router = express.Router();
-
-/* Cookies */
-app.use(cookieParser());
 
 /* Crypto */
 const algorithm = "md5";
-
-/* CORS */
-const corsOptions = {
-  origin: "http://localhost:3000"
-}
 
 /* Node Mailer */
 const transporter = nodemailer.createTransport({
@@ -45,19 +35,18 @@ const mailOptions = {
   text: ''
 };
 
-/* Set router header */
-router.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'POST');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
-  console.log('Request type: ', req.method);
-});
+router.use(cors())
+
+// router.use(function (req, res, next) {
+//     // Website you wish to allow to connect
+//     // console.log(req);
+//     next();
+// });
 
 /* Middleware */
 //This function is used to protect routes, save this for menu etc
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.body['headers']['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; //Get the token 
   if (token == null) return res.status(401).send('Error!');
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -76,7 +65,7 @@ function generateAccessToken(user) {
 
 /* Routes */
 /* POST register */
-router.post('/register', cors(corsOptions), async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
   //Need to check for duplicates
   //Checks if the user exists in the database
   let exists = await UserController.checkRegistration({ email: req.body.email }, res, next);
@@ -103,8 +92,9 @@ router.post('/register', cors(corsOptions), async (req, res, next) => {
 });
 
 /* POST login */
-router.post('/login', cors(corsOptions), async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   //Hash the password first before checking
+  // console.log(req.body);
   let user = await UserController.checkLogin(req, res, next);
   if (user != null) {
     //If the user is registered in the database
@@ -136,7 +126,7 @@ router.delete('/logout', async (req, res, next) => {
 });
 
 /* POST forgot */
-router.post('/forgot', cors(corsOptions), async (req, res, next) => {
+router.post('/forgot', async (req, res, next) => {
   //Send the email
   let user = await UserController.getUserByEmail(req, res, next);
   if (user != {}) {
@@ -159,7 +149,7 @@ router.post('/forgot', cors(corsOptions), async (req, res, next) => {
 });
 
 /* POST getID */
-router.post('/getID', cors(corsOptions), async (req, res, next) => {
+router.post('/getID', async (req, res, next) => {
   //Get the ID
   let user = await UserController.getUserByEmail(req, res, next);
   if (user != {}) {
@@ -170,7 +160,7 @@ router.post('/getID', cors(corsOptions), async (req, res, next) => {
 });
 
 /* POST resetpassword */
-router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
+router.post('/resetpassword', async (req, res, next) => {
   //Change the password
   let user = await UserController.getUserByID(req, res, next);
   if (user != null) {
@@ -184,7 +174,7 @@ router.post('/resetpassword', cors(corsOptions), async (req, res, next) => {
 
 /* POST token */
 //This route is used for generating a new access token given the refresh token
-router.post('/token', cors(corsOptions), async (req, res, next) => {
+router.post('/token', async (req, res, next) => {
   const refreshToken = req.body.refreshToken;
   if (refreshToken == null) return res.sendStatus(401);
   if (UserController.checkToken(req, res, next) === {}) return res.sendStatus(403); 
@@ -196,8 +186,12 @@ router.post('/token', cors(corsOptions), async (req, res, next) => {
   })
 });
 
+// router.options('/posts', async (req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+// })
+
 /* POST posts*/
-router.post('/posts', cors(corsOptions), authenticateToken, async (req, res, next) => {
+router.post('/posts', authenticateToken, async (req, res, next) => {
   let val = await UserController.checkToken(req, res, next)
   try {
     res.json(val);
@@ -208,7 +202,7 @@ router.post('/posts', cors(corsOptions), authenticateToken, async (req, res, nex
 });
 
 /* GET verifyID */
-router.get('/verifyID/:id', cors(corsOptions), async (req, res, next) => {
+router.get('/verifyID/:id', async (req, res, next) => {
   //Verify the ID
   let user = await UserController.getUserByID(req, res, next);
   if (user != undefined) {
@@ -218,9 +212,9 @@ router.get('/verifyID/:id', cors(corsOptions), async (req, res, next) => {
   }
 });
 
-/* GET userInfo */
-router.get('/getUserByUsername', cors(corsOptions), async (req, res, next) => {
-  let user = await UserController.getUserByUsername(req, res, next);
+/* POST updatePic */
+router.post('/updateProfilePic', async (req, res, next) => {
+  let user = await UserController.updateProfilePic(req, res, next);
   if (user != undefined) {
     res.json(user);
   } else {
