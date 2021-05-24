@@ -1,15 +1,22 @@
 import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client'
+import { useLocation } from 'react-router-dom';
 
 const Game = (players) => {
     const [state, setState] = useState({message: '', name: ''});
     const [chat, setChat] = useState([])
     const socketRef = useRef();
+    const tempState = useLocation().state;
+    const gameCode = tempState.gameCode;
+    const user = tempState.user;
 
+    /**
+     * Initializes connection with Socket.io server
+     */
     useEffect(
 		() => {
-			socketRef.current = io.connect("http://localhost:9000")
+			socketRef.current = io.connect("http://localhost:9001")
 			socketRef.current.on("message", ({ name, message }) => {
 				setChat([ ...chat, { name, message } ])
 			})
@@ -39,7 +46,6 @@ const Game = (players) => {
         setState({ message: '', name })
     }
 
-
     /**
      * returns chat object with messages loaded in order chronologically
      * @returns {*} Chat container
@@ -48,7 +54,7 @@ const Game = (players) => {
         console.log(chat);
 		return chat.map(({ recipient, message }, index) => (
 			<div key={index}>
-                {recipient}: <span>{message}</span>
+                {user.username}: <span>{message}</span>
 			</div>
 		))
 	}
@@ -90,7 +96,12 @@ const Game = (players) => {
 
     return (
         <Container>
-            <Row><h1 className='titleText'> Game </h1> </Row>
+            <Row>
+                <Col>
+                    <h1 className='titleText text-center'> Game </h1> 
+                </Col>
+            </Row>
+            <h3> Your game code is: {gameCode} </h3>
             <Row>
                   {getRows(14)}
             </Row>
@@ -100,14 +111,13 @@ const Game = (players) => {
                 <Button>Betray</Button>
             </Row>
         <Form onSubmit={sendMessage}>
-            <Form.Label> Enter Message here </Form.Label>
+            <div>
+                {renderChat()}
+            </div>
             <Form.Control type='text' placeholder='Type message here' onChange={e => changeMessage(e)} value={state.message}/>
             <Button variant='primary' type='submit'>
                 Submit
             </Button>
-            <div>
-                {renderChat()}
-            </div>
         </Form>
         </Container>
     )

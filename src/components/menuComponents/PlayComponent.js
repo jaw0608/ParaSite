@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Modal, Button, Form } from 'react-bootstrap';
 import { io } from 'socket.io-client';
+import { useHistory } from 'react-router-dom';
 
 const socket = io('localhost:9001');
 
 export const PlayTab = ({state, setState}) => {
 
     socket.on('gameCode', (gameCode) => {
-        console.log('gameCodsssssse', gameCode)
+        console.log('gameCode', gameCode)
         setState((prevState) => {
             return {...prevState, gameCode: gameCode}
         });
@@ -34,6 +35,7 @@ export const PlayTab = ({state, setState}) => {
 
 const PlayComponent = ({state, buttonText, detailText, link, func}) => {
     const [showModal, setShowModal] = useState(false);
+    const history = useHistory();
     
     const handleClose = () => { setShowModal(false); }
     const handleShow = () => { setShowModal(true); }
@@ -50,7 +52,7 @@ const PlayComponent = ({state, buttonText, detailText, link, func}) => {
                     </Modal.Header>
                     <DetailComponent gameCode={state.gameCode} type={type} detailText={detailText}/>
                     <Modal.Footer>
-                        <FormComponent type={type} gameCode={state.gameCode} func={func}/>
+                        <FormComponent state={state} history={history} type={type} gameCode={state.gameCode} func={func}/>
                     </Modal.Footer>
                 </Modal>
             </p>
@@ -58,11 +60,12 @@ const PlayComponent = ({state, buttonText, detailText, link, func}) => {
     )
 }
 
-const FormComponent = ({type, gameCode, func}) => {
+
+const FormComponent = ({type, gameCode, func, history, state}) => {
     let body = '';
     switch(type) {
         case 'Create':
-            body = gameCode === '' ? <Button type='submit' variant='secondary'>{type}</Button> : <></>;
+            body = gameCode === '' ?<> <Button type='submit' variant='secondary'>{type}</Button> </> : <Button onClick={() => { history.push({pathname: '/game', state: { gameCode: gameCode, user: state.user }})}}>Go to Game</Button>;
             break;
         case 'Join':
             body = <><input type='text'/> <Button type='submit' variant='secondary'> {type} </Button></>;

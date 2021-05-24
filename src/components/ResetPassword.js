@@ -6,7 +6,7 @@ import axios from 'axios';
 export default function ResetPassword() {
     let location = useLocation();
 
-    const [id, setId] = useState(location.search.split('=')[1]);
+    const id = location.search.split('=')[1];
     const [password, setPassword] = useState('');
     const [valid, setValid] = useState(false);
 

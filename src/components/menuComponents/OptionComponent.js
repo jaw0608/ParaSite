@@ -1,21 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import Avatar from 'react-avatar-edit';
 
 export const OptionsTab = (handlers) => {
     const [state, setState] = [handlers.state, handlers.setState];
-
-    // useEffect(()=> {
-    //     axios.get('http://localhost:9000/users/getUserByEmail', state)
-    //     .then(function(response) {
-    //         setState(prevState => {
-    //             return {...prevState, profilePicture: response.data.profilePicture}
-    //         })
-    //     }).catch(function(err) {
-    //         console.log(err)
-    //     })
-    // }, [])
 
     const onCrop = (profilePicture) => {
         setState(prevState => {
@@ -50,6 +39,7 @@ export const OptionsTab = (handlers) => {
             <Row>
                 <Col sm={6} md={6} lg={6} xl={6}>
                     <Container>
+                        <img src={state.profilePicture === null ? state.user.profilePicture : state.profilePicture} alt="Profile Pic"/>
                         <Row>Full Name: {state.user.firstName} {state.user.lastName} <br /></Row>
                         <Row>Screen Name: {state.user.username} <br /> </Row>
                         <Row>Email: {state.user.email} <br /> </Row>
@@ -60,7 +50,6 @@ export const OptionsTab = (handlers) => {
                 </Col>
                 <Col sm={6} md={6} lg={6} xl={6}>
                     <Form onSubmit={e => {uploadPic(e, state)}}>
-                        <img src={state.profilePicture} alt="Profile Pic"/>
                         <Avatar
                             width={256}
                             height={256}

@@ -37,12 +37,6 @@ const mailOptions = {
 
 router.use(cors())
 
-// router.use(function (req, res, next) {
-//     // Website you wish to allow to connect
-//     // console.log(req);
-//     next();
-// });
-
 /* Middleware */
 //This function is used to protect routes, save this for menu etc
 function authenticateToken(req, res, next) {
@@ -212,7 +206,11 @@ router.get('/verifyID/:id', async (req, res, next) => {
   }
 });
 
-/* POST updatePic */
+/**
+ * POST /users/updateProfilePic
+ * This takes in a user object and updates the profile picture in the db based
+ * on the one 
+ */
 router.post('/updateProfilePic', async (req, res, next) => {
   let user = await UserController.updateProfilePic(req, res, next);
   if (user != undefined) {

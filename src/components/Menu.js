@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Nav, Tab, Row, Col, Container } from 'react-bootstrap';
-import { io } from 'socket.io-client';
+import axios from 'axios';
 
 /* Sub Components */
 import { PlayTab } from './menuComponents/PlayComponent';
@@ -11,11 +11,18 @@ import { OptionsTab } from './menuComponents/OptionComponent';
 
 
 const Menu = () => {
-    const [state, setState] = useState({profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, user: useLocation().state.user, show: false, gameCode: '' });
+    const user = useLocation().state.user;
+    const [state, setState] = useState({profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, user: user, show: false, gameCode: '' });
 
     const fetchAccessories = () => {
         // FETCH IMAGE DATA FROM DB AND PUSH INTO DICTIONARY
         return {heads: [], bodies: [], legs: [], shoes: []}
+    }
+
+    const onLogOut = (e) => {
+        axios.delete('http://localhost:9000/users/logout', (response) => {
+            console.log(response);
+        })
     }
 
     return (
@@ -33,7 +40,7 @@ const Menu = () => {
                                     <MenuComponent eventKey={'options'} tabName={'Options'}/>
                                     <Col className='menuTab' sm={3}>
                                         <Nav.Item>
-                                            <Nav.Link href='/'> Log Out </Nav.Link>
+                                            <Nav.Link href='/' onClick={onLogOut}> Log Out </Nav.Link>
                                         </Nav.Item>
                                     </Col>
                                 </Row>

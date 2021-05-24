@@ -1,5 +1,5 @@
 /* Dependencies */
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
@@ -23,12 +23,13 @@ const Login = () => {
                 console.log(response)
                 let user = response.data.user;
                 let config = {
+                    user: user,
                     headers: {
                         authorization: 'Bearer ' + response.data.accessToken,
                     }
                 } 
                 console.log(response.data, config)
-                axios.post('http://localhost:9000/users/posts', config)
+                axios.post('http://localhost:9000/users/posts', config, {'header': 'reee' })
                     .then(function (response) {
                         console.log(response, user);
                         history.push({pathname:'/menu', state: {user: user}});
