@@ -2,6 +2,7 @@ import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client'
 import { useLocation } from 'react-router-dom';
+import ScrollableFeed from 'react-scrollable-feed';
 
 const Game = (players) => {
     const [state, setState] = useState({message: '', name: ''});
@@ -111,9 +112,9 @@ const Game = (players) => {
                 <Button>Betray</Button>
             </Row>
         <Form onSubmit={sendMessage}>
-            <div>
+            <ScrollableFeed className='chatBox'>
                 {renderChat()}
-            </div>
+            </ScrollableFeed>
             <Form.Control type='text' placeholder='Type message here' onChange={e => changeMessage(e)} value={state.message}/>
             <Button variant='primary' type='submit'>
                 Submit

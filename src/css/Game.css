@@ -3,3 +3,9 @@
     height: 100px;
     width: 100px;
 }
+
+.chatBox {
+    height: 20vh;
+    overflow-y: scroll;
+    background-color: gray;
+}
