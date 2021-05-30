@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const RoomModel = require('../modles/room');
+const RoomModel = require('../models/room');
 
 const app = express();
 const router = express.Router();
@@ -12,3 +12,5 @@ const corsOptions = {
 router.post('/createGame', cors(corsOptions), async (req, res, next) => {
     
 })
+
+module.exports = router;

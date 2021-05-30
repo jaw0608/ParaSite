@@ -6,7 +6,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const cors = require('cors');
 const UserModel = require('../models/user');
 const TokenModel = require('../models/token');
 const UserController = require('../controllers/user');
@@ -23,24 +22,23 @@ const algorithm = "md5";
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'parasitenoreply@gmail.com',
-    pass: 'yT01*Bt%Vhe#'
+    user: process.env.NODE_MAILER_EMAIL,
+    pass: process.env.NODE_MAILER_PW
   }
 });
 
 const mailOptions = {
-  from: 'parasitenoreply@gmail.com',
+  from: process.env.NODE_MAILER_EMAIL,
   to: '',
   subject: '',
   text: ''
 };
 
-router.use(cors())
-
 /* Middleware */
 //This function is used to protect routes, save this for menu etc
 function authenticateToken(req, res, next) {
-  const authHeader = req.body['headers']['authorization'];
+  console.log(req.headers);
+  const authHeader = req.body.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; //Get the token 
   if (token == null) return res.status(401).send('Error!');
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -58,6 +56,7 @@ function generateAccessToken(user) {
 }
 
 /* Routes */
+
 /* POST register */
 router.post('/register', async (req, res, next) => {
   //Need to check for duplicates
@@ -103,8 +102,6 @@ router.post('/login', async (req, res, next) => {
     });
     
     //Set the cookies before the response 
-    res.cookie('accessToken', accessToken);
-    res.cookie('refreshToken', refreshToken);
     res.json({ accessToken: accessToken, refreshToken: refreshToken, user: user });
   } else {
     //User not found
@@ -126,7 +123,6 @@ router.post('/forgot', async (req, res, next) => {
   if (user != {}) {
     mailOptions.to = user.email;
     mailOptions.subject = "Forgot Password";
-    console.log(req.headers)
     mailOptions.text = "Here is a link to reset your account: " + req.headers['origin'] + "/resetpassword?id=" + user._id;
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
@@ -180,10 +176,6 @@ router.post('/token', async (req, res, next) => {
   })
 });
 
-// router.options('/posts', async (req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-// })
-
 /* POST posts*/
 router.post('/posts', authenticateToken, async (req, res, next) => {
   let val = await UserController.checkToken(req, res, next)
@@ -211,7 +203,7 @@ router.get('/verifyID/:id', async (req, res, next) => {
  * This takes in a user object and updates the profile picture in the db based
  * on the one 
  */
-router.post('/updateProfilePic', async (req, res, next) => {
+router.post('/updateProfilePic', authenticateToken, async (req, res, next) => {
   let user = await UserController.updateProfilePic(req, res, next);
   if (user != undefined) {
     res.json(user);

@@ -4,10 +4,11 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
-const Login = () => {
+const Login = ({state, setState}) => {
     const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [invalid, setInvalid] = useState(false);
 
     /**
      * This will take the username and password entered and check if it's a valid user
@@ -16,32 +17,31 @@ const Login = () => {
      */
     const login = (e) => {
         e.preventDefault();
+        
         axios.post('http://localhost:9000/users/login', {'username': username, 'password': password})
             .then(function (response) {
+                console.log(response);
+                if (response.status !== 200) { 
+                    setInvalid(true);
+                    return;
+                 }
                 //This returns the access and refresh token, now authenticate the token
                 //THEN redirect to menu page
-                console.log(response)
                 let user = response.data.user;
-                let config = {
-                    user: user,
-                    headers: {
-                        authorization: 'Bearer ' + response.data.accessToken,
-                    }
-                } 
-                console.log(response.data, config)
-                axios.post('http://localhost:9000/users/posts', config, {'header': 'reee' })
-                    .then(function (response) {
-                        console.log(response, user);
-                        history.push({pathname:'/menu', state: {user: user}});
-                    })
-                    //AXIOS.JS LINE 87?
-                    .catch(function (error) { console.log(error); })
-            }).catch(function (error) { console.log(error); });
+                localStorage.setItem('accessToken', response.data.accessToken);
+                localStorage.setItem('refreshToken', response.data.refreshToken);
+
+                history.push({pathname:'/menu', state: { user: user }});
+            }).catch(function (error) { 
+                setInvalid(true)
+                console.log(error); 
+            });
         }
- 
+
     return (
-        <Form onSubmit={login} className='login-box p-4'>
+        <Form onSubmit={e => login(e)} className='login-box p-4'>
             <h1 className="font-weight-bold titleText text-center"> ParaSite </h1>
+            {invalid ? <p>Invalid username/password combination!</p> : <></>}
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" placeholder="Username" onChange={e => setUsername(e.target.value)}/>

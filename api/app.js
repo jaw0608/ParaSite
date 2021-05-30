@@ -1,31 +1,34 @@
 /* Libraries */
-const createError = require('http-errors');
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const mongoose = require('mongoose');
 
 /* Routes */
 const usersRouter = require('./routes/user');
-
+const gameRouter = require('./routes/game');
 const ioHelpers = require('./ioHelpers');
 
 /* Initialize app */
 const app = express();
 const port = process.env.PORT || 9000;
+const socketport = ioHelpers.normalizePort(process.env.PORT || '9001');
 
 /* Enable CORS*/
-app.use(cors({ origin: true }));
+console.log(cors)
+app.use(cors());
 app.use(express.urlencoded({ limit: "50mb", extended: true }))
 app.use(express.json({limit: '50mb'}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 /* Routes */
 app.use('/users', usersRouter);
+// app.use('/game', gameRouter);
 
 /* Mongoose */
-const uri = 'mongodb+srv://' + process.env.ATLAS_USER + ':' + process.env.ATLAS_PW + '@' + process.env.ATLAS_DB + '?retryWrites=true&w=majority';
+const uri = process.env.MONGO_URI;
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -34,22 +37,12 @@ mongoose.connect(uri, {
 });
 
 mongoose.Promise = global.Promise;
-var async = require('async');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 /* Socket.IO */
 /* Create HTTP server. */
 const httpServer = require('http').createServer(app);
-const socketport = ioHelpers.normalizePort(process.env.PORT || '9001');
 app.set('port', port);
 const io = require('socket.io')(httpServer, {
   cors: {

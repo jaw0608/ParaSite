@@ -20,8 +20,6 @@ export const OptionsTab = (handlers) => {
 
     const uploadPic = (e, state) => {
         e.preventDefault();
-        console.log('upload pic')
-        console.log(state);
         axios.post('http://localhost:9000/users/updateProfilePic', state)
         .then(function (response) {
             console.log(response.data);
@@ -30,7 +28,7 @@ export const OptionsTab = (handlers) => {
         })
         return;
     }
-
+ 
     return (
         <Container>
             <Col sm={12}>

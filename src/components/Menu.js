@@ -11,7 +11,8 @@ import { OptionsTab } from './menuComponents/OptionComponent';
 
 
 const Menu = () => {
-    const user = useLocation().state.user;
+    const authState = useLocation().state;
+    const user = authState.user;
     const [state, setState] = useState({profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, user: user, show: false, gameCode: '' });
 
     const fetchAccessories = () => {

@@ -1,5 +1,5 @@
 /*DEPENDENCIES */
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,6 +13,8 @@ import Menu from './components/Menu';
 import Forgot from './components/Forgot';
 import ResetPassword from './components/ResetPassword';
 import Game from './components/Game';
+import { PublicRoute, ProtectedRoute } from './components/misc/Routes';
+import NotFoundPage from './components/NotFoundPage'
 
 /* SVGS */
 
@@ -25,16 +27,19 @@ import './css/Game.css';
 import './css/Login.css';
 
 const App = () => {
+  const [state, setState] = useState({ user: null });
+
   return(
     <div className="App">
         <Router>
           <Switch>
-            <Route exact path="/" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route path="/menu" component={Menu}/>
-            <Route path="/forgot" component={Forgot}/>
-            <Route path="/resetPassword" component={ResetPassword}/>
-            <Route path='/game' component={Game}/>
+            <PublicRoute exact path="/" component={() => <Login state={state} setState={setState}/>} />
+            <PublicRoute path="/register" component={Register} />
+            <PublicRoute path="/forgot" component={Forgot}/>
+            <PublicRoute path="/resetPassword" component={ResetPassword}/>
+            <ProtectedRoute props={[state, setState]} path="/menu" component={Menu} />
+            <ProtectedRoute props={[state, setState]} path='/game' component={Game} />
+            <PublicRoute path='/*' component={NotFoundPage}/>
           </Switch>
         </Router>
       </div>

@@ -60,7 +60,6 @@ const PlayComponent = ({state, buttonText, detailText, link, func}) => {
     )
 }
 
-
 const FormComponent = ({type, gameCode, func, history, state}) => {
     let body = '';
     switch(type) {
@@ -94,7 +93,6 @@ const DetailComponent = ({gameCode, type, detailText}) => {
 const createGame = (e) => {
     // Create room object upload to mongo 
     e.preventDefault();
-    console.log('create game?')
     socket.emit('createGame');
 }
 
