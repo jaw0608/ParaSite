@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
-  Switch,
-  Route
+  Switch
 } from 'react-router-dom';
 
 /* COMPONENTS */

@@ -4,8 +4,10 @@ import axios from 'axios';
 import Avatar from 'react-avatar-edit';
 
 export const OptionsTab = (handlers) => {
+    // console.log(handlers)
     const [state, setState] = [handlers.state, handlers.setState];
 
+    console.log(state, setState)
     const onCrop = (profilePicture) => {
         setState(prevState => {
             return {...prevState, profilePicture: profilePicture}

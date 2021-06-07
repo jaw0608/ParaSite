@@ -28,14 +28,15 @@ const Login = ({state, setState}) => {
                 //This returns the access and refresh token, now authenticate the token
                 //THEN redirect to menu page
                 let user = response.data.user;
-                localStorage.setItem('accessToken', response.data.accessToken);
-                localStorage.setItem('refreshToken', response.data.refreshToken);
-                setState(() => {
+                setState((prevState) => {
                     return {
                         user: user,
                         isAuthenticated: true
                     }
                 })
+                localStorage.setItem('accessToken', response.data.accessToken);
+                localStorage.setItem('refreshToken', response.data.refreshToken);
+                localStorage.setItem('isAuthenticated', true)
                 console.log(state)
 
                 history.push({pathname:'/menu', state: { user: user }});

@@ -4,14 +4,25 @@ import { io } from 'socket.io-client'
 import { useLocation } from 'react-router-dom';
 import ScrollableFeed from 'react-scrollable-feed';
 
-const Game = (players) => {
-    const [state, setState] = useState({message: '', name: ''});
+const Game = () => {
+    const [message, setMessage] = useState({message: '', name: ''});
     const [chat, setChat] = useState([])
     const socketRef = useRef();
-    const tempState = useLocation().state;
+    const tempState = useLocation().state.state;
     const gameCode = tempState.gameCode;
     const user = tempState.user;
+    const socket = io('http://localhost:9001')
+    
+    let players = [user];
 
+
+    console.log(tempState)
+
+    socket.on('joinedGame', (player, code) => {
+        if (code === gameCode) {
+
+        }
+    })
     /**
      * Initializes connection with Socket.io server
      */
@@ -25,14 +36,14 @@ const Game = (players) => {
 		},
 		[ chat ]
 	)
-    
+
     /**
      * This will dynamically change the state message and is called whenever the message in the chat box changes
      * @param {event} e 
      */
     const changeMessage = (e) => {
-        console.log(state, e.target.value)
-        setState(prevState => {return {...prevState, message: [e.target.value]}})
+        console.log(tempState, e.target.value)
+        setMessage(prevState => {return {...prevState, message: [e.target.value]}})
         e.persist();
     }
 
@@ -41,10 +52,10 @@ const Game = (players) => {
      * @param {event} e 
      */
     const sendMessage = (e) => {
-        const { name, message } = state;
+        const { name, message } = tempState;
         socketRef.current.emit("message", {name, message})
         e.preventDefault();
-        setState({ message: '', name })
+        setMessage({ message: '', name })
     }
 
     /**
@@ -52,7 +63,6 @@ const Game = (players) => {
      * @returns {*} Chat container
      */
     const renderChat = () => {
-        console.log(chat);
 		return chat.map(({ recipient, message }, index) => (
 			<div key={index}>
                 {user.username}: <span>{message}</span>
@@ -67,15 +77,16 @@ const Game = (players) => {
      */
     const getRows = (players) => {
         // 4 players per row
+        
         let playerEntries = [];
-        const rows = parseInt(players/4);
-        const remainder = players%4;
-
+        const rows = parseInt(players.length/4);
+        const remainder = players.length%4;
+ 
         console.log(rows, remainder);
         for (let i = 0; i < rows; i++){
             playerEntries.push([])
             for (let j = 0; j < 4; j++) {
-                playerEntries[i].push(j)
+                playerEntries[i].push(players[i*j])
             }
         }
 
@@ -104,7 +115,7 @@ const Game = (players) => {
             </Row>
             <h3> Your game code is: {gameCode} </h3>
             <Row>
-                  {getRows(14)}
+                  {getRows(players)}
             </Row>
             <Row>
                 <Button>Attack</Button>
@@ -115,7 +126,7 @@ const Game = (players) => {
             <ScrollableFeed className='chatBox'>
                 {renderChat()}
             </ScrollableFeed>
-            <Form.Control type='text' placeholder='Type message here' onChange={e => changeMessage(e)} value={state.message}/>
+            <Form.Control type='text' placeholder='Type message here' onChange={e => changeMessage(e)} value={message.message}/>
             <Button variant='primary' type='submit'>
                 Submit
             </Button>

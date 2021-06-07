@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 /* Routes */
 const usersRouter = require('./routes/user');
 const gameRouter = require('./routes/game');
+const authRouter = require('./routes/auth');
 const ioHelpers = require('./ioHelpers');
 
 /* Initialize app */
@@ -15,7 +16,7 @@ const port = process.env.PORT || 9000;
 const socketport = ioHelpers.normalizePort(process.env.PORT || '9001');
 
 /* Enable CORS*/
-console.log(cors)
+// console.log(cors)
 app.use(cors());
 app.use(express.urlencoded({ limit: "50mb", extended: true }))
 app.use(express.json({limit: '50mb'}));
@@ -25,7 +26,9 @@ app.use(cookieParser());
 
 /* Routes */
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
 // app.use('/game', gameRouter);
+
 
 /* Mongoose */
 const uri = process.env.MONGO_URI;
@@ -51,13 +54,19 @@ const io = require('socket.io')(httpServer, {
 
 /* Listeners */
 io.on('connection', (socket) => {
-  socket.on('message', ({ name, message}) => {
+  socket.on('message', ({ name, message }) => {
     io.emit('message', { name, message })
+  })
+
+  socket.on('joinGame', ({ state, gameCode }) => {
+    if (io.sockets.adapter.rooms[gameCode]) { ioHelpers.joinGame(socket, gameCode) } 
+    else { ioHelpers.failedToJoin(socket, gameCode) }
   })
 
   socket.on('createGame', () => {
     ioHelpers.createGame(socket);
   })
+
 })
 io.on('error', ioHelpers.onError);
 io.on('listening', ioHelpers.onListening);

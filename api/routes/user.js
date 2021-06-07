@@ -15,9 +15,6 @@ const jwt = require('jsonwebtoken');
 /* Router */
 const router = express.Router();
 
-/* Crypto */
-const algorithm = "md5";
-
 /* Node Mailer */
 const transporter = nodemailer.createTransport({
   service: 'gmail',

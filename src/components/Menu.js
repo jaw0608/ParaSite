@@ -1,6 +1,5 @@
 /* Library dependencies */
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Nav, Tab, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -11,9 +10,7 @@ import { OptionsTab } from './menuComponents/OptionComponent';
 
 
 const Menu = ({state, setState}) => {
-    // const authState = useLocation().state;
-    // const user = authState.user;
-    const [localState, setLocalState] = useState({mainState: state, profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, show: false, gameCode: '' });
+    const [localState, setLocalState] = useState({mainState: state, profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, show: false });
 
     // console.log(state)
     const fetchAccessories = () => {
@@ -23,7 +20,7 @@ const Menu = ({state, setState}) => {
 
     const onLogOut = (e) => {
         axios.delete('http://localhost:9000/users/logout', (response) => {
-            console.log(response);
+            localStorage.setItem('isAuthenticated', false)
         })
     }
 

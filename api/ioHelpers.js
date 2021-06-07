@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const RoomModel = require('./models/room');
+const io = 
 
 function generateGameCode() {
     let result = '';
@@ -69,7 +70,7 @@ function onError(error) {
  * Create new game
  * @returns Room Code
  */
-function createGame(client) {
+const createGame = (client) => {
   // Create game
   let gameCode = generateGameCode();
   let promise = RoomModel.create({
@@ -87,9 +88,20 @@ function createGame(client) {
   return gameCode;
 }
 
+const joinGame = (client, gameCode) => {
+  client.join(gameCode)
+  client.emit('joinedGame', gameCode)
+}
+
+const failedToJoin = (client, gameCode) => {
+  client.emit('failedToJoin', gameCode)
+}
+
 module.exports = {
     onListening,
     normalizePort,
     onError,
-    createGame
+    createGame,
+    joinGame,
+    failedToJoin
 }

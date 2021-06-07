@@ -36,6 +36,8 @@ export const PlayTab = ({state, setState}) => {
 const PlayComponent = ({state, buttonText, detailText, link, func}) => {
     const [showModal, setShowModal] = useState(false);
     const history = useHistory();
+
+    // console.log(state)
     
     const handleClose = () => { setShowModal(false); }
     const handleShow = () => { setShowModal(true); }
@@ -52,7 +54,7 @@ const PlayComponent = ({state, buttonText, detailText, link, func}) => {
                     </Modal.Header>
                     <DetailComponent gameCode={state.gameCode} type={type} detailText={detailText}/>
                     <Modal.Footer>
-                        <FormComponent state={state} history={history} type={type} gameCode={state.gameCode} func={func}/>
+                        <FormComponent state={state} history={history} type={type} func={func}/>
                     </Modal.Footer>
                 </Modal>
             </p>
@@ -60,19 +62,20 @@ const PlayComponent = ({state, buttonText, detailText, link, func}) => {
     )
 }
 
-const FormComponent = ({type, gameCode, func, history, state}) => {
+const FormComponent = ({type, func, history, state}) => {
     let body = '';
+    const [gameCode, setGameCode] = useState('')
     switch(type) {
         case 'Create':
-            body = gameCode === '' ?<> <Button type='submit' variant='secondary'>{type}</Button> </> : <Button onClick={() => { history.push({pathname: '/game', state: { gameCode: gameCode, user: state.user }})}}>Go to Game</Button>;
+            body = gameCode === '' ?<> <Button type='submit' variant='secondary'>{type}</Button> </> : <Button onClick={() => { history.push({pathname: '/game', state })}}>Go to Game</Button>;
             break;
         case 'Join':
-            body = <><input type='text'/> <Button type='submit' variant='secondary'> {type} </Button></>;
+            body = <><input type='text' onChange={(e) => { setGameCode(e.target.value) }} /> <Button type='submit' variant='secondary'> {type} </Button></>;
             break;
         default:
             break;
     }
-    return <Form onSubmit={func}>{body}</Form>
+    return <Form onSubmit={(e) => { func(e, state, gameCode)}}>{body}</Form>
 }
 
 const DetailComponent = ({gameCode, type, detailText}) => {
@@ -96,7 +99,8 @@ const createGame = (e) => {
     socket.emit('createGame');
 }
 
-const joinGame = (e, code) => {
+const joinGame = (e, state, code) => {
     e.preventDefault();
-    socket.emit('joinGame', code)
+    console.log(code);
+    socket.emit('joinGame', state, code)
 }
