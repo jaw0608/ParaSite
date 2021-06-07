@@ -37,10 +37,10 @@ export const OptionsTab = (handlers) => {
             <Row>
                 <Col sm={6} md={6} lg={6} xl={6}>
                     <Container>
-                        <img src={state.profilePicture === null ? state.user.profilePicture : state.profilePicture} alt="Profile Pic"/>
-                        <Row>Full Name: {state.user.firstName} {state.user.lastName} <br /></Row>
-                        <Row>Screen Name: {state.user.username} <br /> </Row>
-                        <Row>Email: {state.user.email} <br /> </Row>
+                        <img src={state.profilePicture === null ? state.mainState.user.profilePicture : state.profilePicture} alt="Profile Pic"/>
+                        <Row>Full Name: {state.mainState.user.firstName} {state.mainState.user.lastName} <br /></Row>
+                        <Row>Screen Name: {state.mainState.user.username} <br /> </Row>
+                        <Row>Email: {state.mainState.user.email} <br /> </Row>
                         <Row> 
                             <Button> Change Password </Button>
                         </Row>

@@ -38,8 +38,6 @@ mongoose.connect(uri, {
 
 mongoose.Promise = global.Promise;
 
-
-
 /* Socket.IO */
 /* Create HTTP server. */
 const httpServer = require('http').createServer(app);

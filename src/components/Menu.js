@@ -10,11 +10,12 @@ import { ProfileTab } from './menuComponents/ProfileComponent';
 import { OptionsTab } from './menuComponents/OptionComponent';
 
 
-const Menu = () => {
-    const authState = useLocation().state;
-    const user = authState.user;
-    const [state, setState] = useState({profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, user: user, show: false, gameCode: '' });
+const Menu = ({state, setState}) => {
+    // const authState = useLocation().state;
+    // const user = authState.user;
+    const [localState, setLocalState] = useState({mainState: state, profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, show: false, gameCode: '' });
 
+    // console.log(state)
     const fetchAccessories = () => {
         // FETCH IMAGE DATA FROM DB AND PUSH INTO DICTIONARY
         return {heads: [], bodies: [], legs: [], shoes: []}
@@ -51,13 +52,13 @@ const Menu = () => {
                     <Col sm={12}>
                         <Tab.Content>
                             <Tab.Pane eventKey='profile'>
-                                <ProfileTab state={state} setState={setState} accessories={fetchAccessories()}/>
+                                <ProfileTab state={localState} setState={setLocalState} accessories={fetchAccessories()}/>
                             </Tab.Pane>
                             <Tab.Pane eventKey='play'>
-                                <PlayTab state={state} setState={setState}/>
+                                <PlayTab state={localState} setState={setLocalState}/>
                             </Tab.Pane>
                             <Tab.Pane eventKey='options'>
-                                <OptionsTab state={state} setState={setState}/>
+                                <OptionsTab state={localState} setState={setLocalState}/>
                             </Tab.Pane>
                         </Tab.Content>
                     </Col>

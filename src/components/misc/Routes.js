@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { Route, Redirect } from 'react-router';
-import axios from 'axios';
 
 export const PublicRoute = ({ component: Component, state, setState, ...rest }) => {
     return (
@@ -11,12 +10,10 @@ export const PublicRoute = ({ component: Component, state, setState, ...rest }) 
 }
 
 export const ProtectedRoute = ({ component: Component, state, setState, ...rest }) => {
-    const [isAuthenticated, setauth] = useState(false);
 
-    console.log(isAuthenticated)
     return (
     <Route {...rest} render={(props) => {
-        return isAuthenticated === true ? <Component {...rest} {...props} state={state} setState={setState}/> : <Redirect to='/'/>
+        return state.isAuthenticated === true ? <Component {...rest} {...props} state={state} setState={setState}/> : <Redirect to='/'/>
     }}>
     </Route>
     )

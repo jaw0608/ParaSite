@@ -16,25 +16,32 @@ const Login = ({state, setState}) => {
      * @param {event} e 
      */
     const login = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         
         axios.post('http://localhost:9000/users/login', {'username': username, 'password': password})
             .then(function (response) {
-                console.log(response);
+                console.log(response)
                 if (response.status !== 200) { 
-                    setInvalid(true);
+                    setInvalid(true)
                     return;
-                 }
+                }
                 //This returns the access and refresh token, now authenticate the token
                 //THEN redirect to menu page
                 let user = response.data.user;
                 localStorage.setItem('accessToken', response.data.accessToken);
                 localStorage.setItem('refreshToken', response.data.refreshToken);
+                setState(() => {
+                    return {
+                        user: user,
+                        isAuthenticated: true
+                    }
+                })
+                console.log(state)
 
                 history.push({pathname:'/menu', state: { user: user }});
             }).catch(function (error) { 
                 setInvalid(true)
-                console.log(error); 
+                console.log(error) 
             });
         }
 

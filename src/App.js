@@ -27,7 +27,7 @@ import './css/Game.css';
 import './css/Login.css';
 
 const App = () => {
-  const [state, setState] = useState({ user: null });
+  const [state, setState] = useState({ user: null, isAuthenticated: false });
 
   return(
     <div className="App">
@@ -37,13 +37,14 @@ const App = () => {
             <PublicRoute path="/register" component={Register} />
             <PublicRoute path="/forgot" component={Forgot}/>
             <PublicRoute path="/resetPassword" component={ResetPassword}/>
-            <ProtectedRoute props={[state, setState]} path="/menu" component={Menu} />
-            <ProtectedRoute props={[state, setState]} path='/game' component={Game} />
+            <ProtectedRoute state={state} setState={setState} path="/menu" component={Menu} />
+            <ProtectedRoute state={state} setState={setState} path='/game' component={Game} />
             <PublicRoute path='/*' component={NotFoundPage}/>
           </Switch>
         </Router>
       </div>
   )
+
 }
 
 export default App;

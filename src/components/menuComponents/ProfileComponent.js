@@ -25,19 +25,26 @@ export const ProfileTab = ({state, setState, accessories}) => {
     )
 }
 
-const AvatarCustomizeRow = (accessory, state) => {
-    function onClick () {
+const AvatarCustomizeRow = ({accessory, state}) => {
+
+    const onClickLeft = () => {
         console.log('onclick works')
         return null;
     }
+
+    const onClickRight = () => {
+        console.log('onclickright works')
+        return null;
+    }
+
     return (
         <Row>
-          <Col s={{ span: 3, offset: 3 }}>
-            <BiLeftArrowCircle className='profileArrow mx-auto d-block' onClick={onClick}/>
+          <Col xs={12, {order: 2}} sm={3, {order: 1}}>
+            <BiLeftArrowCircle className='profileArrow mx-auto d-block' onClick={onClickLeft}/>
           </Col>
-          <Col> <Image className='mx-auto d-block' src="https://via.placeholder.com/120"></Image> </Col>
-          <Col s={{ span: 3, offset: 3}}>
-            <BiRightArrowCircle className='profileArrow mx-auto d-block' onClick={onClick}/> 
+          <Col sm={6, {order: 2}}> <Image className='mx-auto d-block' src="https://via.placeholder.com/120"></Image> </Col>
+          <Col xs={12, {order: 2}} sm={3, {order: 3}}>
+            <BiRightArrowCircle className='profileArrow mx-auto d-block' onClick={onClickRight}/> 
           </Col> 
         </Row>
     )

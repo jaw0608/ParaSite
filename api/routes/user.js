@@ -51,7 +51,6 @@ function authenticateToken(req, res, next) {
 
 //Generates an access token
 function generateAccessToken(user) {
-  // console.log(process.env);
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m'});
 }
 
@@ -113,6 +112,7 @@ router.post('/login', async (req, res, next) => {
 /* DELETE logout */
 router.delete('/logout', async (req, res, next) => {
   UserController.logout(req, res, next);
+  console.log('successfully logged out');
   res.sendStatus(204);
 });
 
