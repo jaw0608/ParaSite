@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const RoomModel = require('./models/room');
-const io = 
+// const io = 
 
 function generateGameCode() {
     let result = '';
@@ -79,8 +79,10 @@ const createGame = (client) => {
       gameCode: gameCode
   })
   promise.then(room => {
+      console.log(room)
       client.emit('gameCode', gameCode);
       client.join(gameCode);
+      console.log('joined:', gameCode)
       client.number = 1;
   }).catch(err => {
     console.log(err);
@@ -88,9 +90,11 @@ const createGame = (client) => {
   return gameCode;
 }
 
-const joinGame = (client, gameCode) => {
+const joinGame = (client, state, gameCode) => {
   client.join(gameCode)
-  client.emit('joinedGame', gameCode)
+  // send to game socket too
+  client.emit('successfulJoin', gameCode)
+  client.to(gameCode).emit('successfulJoin', state.mainState.user)
 }
 
 const failedToJoin = (client, gameCode) => {

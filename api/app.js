@@ -58,8 +58,8 @@ io.on('connection', (socket) => {
     io.emit('message', { name, message })
   })
 
-  socket.on('joinGame', ({ state, gameCode }) => {
-    if (io.sockets.adapter.rooms[gameCode]) { ioHelpers.joinGame(socket, gameCode) } 
+  socket.on('joinGame', (state, gameCode) => {
+    if (io.sockets.adapter.rooms.has(gameCode)) { ioHelpers.joinGame(socket, state, gameCode) } 
     else { ioHelpers.failedToJoin(socket, gameCode) }
   })
 

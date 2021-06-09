@@ -5,24 +5,15 @@ import { useLocation } from 'react-router-dom';
 import ScrollableFeed from 'react-scrollable-feed';
 
 const Game = () => {
-    const [message, setMessage] = useState({message: '', name: ''});
     const [chat, setChat] = useState([])
+    const tempState = useLocation().state;
     const socketRef = useRef();
-    const tempState = useLocation().state.state;
+    const [message, setMessage] = useState({message: '', name: tempState.mainState.user.username});
     const gameCode = tempState.gameCode;
-    const user = tempState.user;
-    const socket = io('http://localhost:9001')
+    const user = tempState.mainState.user;
     
     let players = [user];
 
-
-    console.log(tempState)
-
-    socket.on('joinedGame', (player, code) => {
-        if (code === gameCode) {
-
-        }
-    })
     /**
      * Initializes connection with Socket.io server
      */
@@ -30,11 +21,18 @@ const Game = () => {
 		() => {
 			socketRef.current = io.connect("http://localhost:9001")
 			socketRef.current.on("message", ({ name, message }) => {
+                console.log(name)
 				setChat([ ...chat, { name, message } ])
 			})
+            socketRef.current.on('successfulJoin', ({player, code}) => {
+                console.log('successful join game side at:', code)
+                if (code === gameCode) {
+                    players.push(player);
+                }
+            })
 			return () => socketRef.current.disconnect()
 		},
-		[ chat ]
+		[ chat, players, gameCode ]
 	)
 
     /**
@@ -42,7 +40,6 @@ const Game = () => {
      * @param {event} e 
      */
     const changeMessage = (e) => {
-        console.log(tempState, e.target.value)
         setMessage(prevState => {return {...prevState, message: [e.target.value]}})
         e.persist();
     }
@@ -52,10 +49,9 @@ const Game = () => {
      * @param {event} e 
      */
     const sendMessage = (e) => {
-        const { name, message } = tempState;
-        socketRef.current.emit("message", {name, message})
         e.preventDefault();
-        setMessage({ message: '', name })
+        socketRef.current.emit("message", {name: message.name, message: message.message})
+        setMessage({ message: '', name: message.name })
     }
 
     /**
@@ -63,9 +59,10 @@ const Game = () => {
      * @returns {*} Chat container
      */
     const renderChat = () => {
-		return chat.map(({ recipient, message }, index) => (
+        console.log(chat)
+		return chat.map(({ name, message }, index) => (
 			<div key={index}>
-                {user.username}: <span>{message}</span>
+                {name}: <span>{message}</span>
 			</div>
 		))
 	}
@@ -82,22 +79,20 @@ const Game = () => {
         const rows = parseInt(players.length/4);
         const remainder = players.length%4;
  
-        console.log(rows, remainder);
         for (let i = 0; i < rows; i++){
             playerEntries.push([])
             for (let j = 0; j < 4; j++) {
-                playerEntries[i].push(players[i*j])
+                playerEntries[i].push(players[i*j].username)
             }
         }
 
         if (remainder > 0) {
+            const playersSoFar = rows*4;
             playerEntries.push([]);
-            for (let i = 0; i < remainder; i++) {
-                playerEntries[playerEntries.length-1].push(i)
+            for (let i = playersSoFar; i < playersSoFar + remainder; i++) {
+                playerEntries[playerEntries.length-1].push(players[i].username)
             }
         }
-
-        console.log(playerEntries);
 
         return (
             <Container>
@@ -141,7 +136,6 @@ const Game = () => {
  * @returns Row of players in container
  */
 const RowComponent = ({players}) => {
-    console.log(players);
     return (
         <Row>
             {players.map(player => <Col className='room'>{player}</Col>)}

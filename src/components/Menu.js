@@ -10,7 +10,7 @@ import { OptionsTab } from './menuComponents/OptionComponent';
 
 
 const Menu = ({state, setState}) => {
-    const [localState, setLocalState] = useState({mainState: state, profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, show: false });
+    const [localState, setLocalState] = useState({mainState: state, profilePicture: null, src: null, head: null, body: null, legs: null, shoes: null, show: false, gameCode: '' });
 
     // console.log(state)
     const fetchAccessories = () => {

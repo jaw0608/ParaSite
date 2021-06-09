@@ -5,7 +5,9 @@ import { useHistory } from 'react-router-dom';
 
 const socket = io('localhost:9001');
 
+
 export const PlayTab = ({state, setState}) => {
+    const history = useHistory();
 
     socket.on('gameCode', (gameCode) => {
         console.log('gameCode', gameCode)
@@ -13,6 +15,11 @@ export const PlayTab = ({state, setState}) => {
             return {...prevState, gameCode: gameCode}
         });
     });
+
+    socket.on('successfulJoin', (gameCode) => {
+        console.log('successful join play component side at:', gameCode)
+        history.push('/game', state)
+    })
 
     return (
         <Container>
@@ -24,8 +31,8 @@ export const PlayTab = ({state, setState}) => {
                 </Col>
             </Row>
             <Row>
-                <PlayComponent state={state} buttonText={'Create a Game'} func={createGame} detailText={'Create a new game - you will be given a game code to share with your friends'} link={'/game'}/>
-                <PlayComponent state={state} buttonText={'Join a Game'} func={joinGame} detailText={'Join a game - you will be prompted to enter a game code to play.'} link={'/game'}/>
+                <PlayComponent state={state} buttonText={'Create a Game'} func={createGame} detailText={'Create a new game - you will be given a game code to share with your friends'} history={history}/>
+                <PlayComponent state={state} setState={setState} buttonText={'Join a Game'} func={joinGame} detailText={'Join a game - you will be prompted to enter a game code to play.'} history={history}/>
                 <Col xs={12} sm={6} className='playColumn'>
                 </Col>
             </Row>
@@ -33,9 +40,8 @@ export const PlayTab = ({state, setState}) => {
     )
 }
 
-const PlayComponent = ({state, buttonText, detailText, link, func}) => {
+const PlayComponent = ({state, setState, buttonText, detailText, history, func}) => {
     const [showModal, setShowModal] = useState(false);
-    const history = useHistory();
 
     // console.log(state)
     
@@ -54,7 +60,7 @@ const PlayComponent = ({state, buttonText, detailText, link, func}) => {
                     </Modal.Header>
                     <DetailComponent gameCode={state.gameCode} type={type} detailText={detailText}/>
                     <Modal.Footer>
-                        <FormComponent state={state} history={history} type={type} func={func}/>
+                        <FormComponent state={state} setState={setState} history={history} type={type} func={func}/>
                     </Modal.Footer>
                 </Modal>
             </p>
@@ -62,24 +68,30 @@ const PlayComponent = ({state, buttonText, detailText, link, func}) => {
     )
 }
 
-const FormComponent = ({type, func, history, state}) => {
+const FormComponent = ({type, func, history, state, setState}) => {
     let body = '';
-    const [gameCode, setGameCode] = useState('')
+    const [gameCode, setGameCode] = useState('');
+    const handleChangeGameCode = (e) => {
+        e.persist();
+        setGameCode(e.target.value)
+    }
     switch(type) {
         case 'Create':
-            body = gameCode === '' ?<> <Button type='submit' variant='secondary'>{type}</Button> </> : <Button onClick={() => { history.push({pathname: '/game', state })}}>Go to Game</Button>;
+            body = state.gameCode === '' ?<> <Button type='submit' variant='secondary'>{type}</Button> </> : <Button onClick={() => { history.push({pathname: '/game', state })}}>Go to Game</Button>;
             break;
         case 'Join':
-            body = <><input type='text' onChange={(e) => { setGameCode(e.target.value) }} /> <Button type='submit' variant='secondary'> {type} </Button></>;
+            body = <><input type='text' onInput={handleChangeGameCode} /> <Button type='submit' variant='secondary'> {type} </Button></>;
             break;
         default:
             break;
     }
-    return <Form onSubmit={(e) => { func(e, state, gameCode)}}>{body}</Form>
+    return <Form onSubmit={(e) => { func(e, state, gameCode) }
+    }>{body}</Form>
 }
 
 const DetailComponent = ({gameCode, type, detailText}) => {
     let info = '';
+    // console.log(gameCode, type, detailText)
     switch(type) {
         case 'Create':
             info = gameCode !== '' ? 'Your game code is: ' + gameCode : detailText;
@@ -99,8 +111,8 @@ const createGame = (e) => {
     socket.emit('createGame');
 }
 
-const joinGame = (e, state, code) => {
+const joinGame = (e, state, gameCode) => {
     e.preventDefault();
-    console.log(code);
-    socket.emit('joinGame', state, code)
+    console.log(e, state, gameCode);
+    socket.emit('joinGame', state, gameCode)
 }
