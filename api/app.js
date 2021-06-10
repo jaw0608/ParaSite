@@ -54,11 +54,13 @@ const io = require('socket.io')(httpServer, {
 
 /* Listeners */
 io.on('connection', (socket) => {
+  console.log(socket.id)
   socket.on('message', ({ name, message }) => {
     io.emit('message', { name, message })
   })
 
   socket.on('joinGame', (state, gameCode) => {
+    console.log(state.mainState.user.username + 'is attempting to join game')
     if (io.sockets.adapter.rooms.has(gameCode)) { ioHelpers.joinGame(socket, state, gameCode) } 
     else { ioHelpers.failedToJoin(socket, gameCode) }
   })

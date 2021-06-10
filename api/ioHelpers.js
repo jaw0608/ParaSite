@@ -94,7 +94,7 @@ const joinGame = (client, state, gameCode) => {
   client.join(gameCode)
   // send to game socket too
   client.emit('successfulJoin', gameCode)
-  client.to(gameCode).emit('successfulJoin', state.mainState.user)
+  client.emit('successfulJoinGame', state.mainState.user)
 }
 
 const failedToJoin = (client, gameCode) => {

@@ -4,6 +4,8 @@ import { io } from 'socket.io-client'
 import { useLocation } from 'react-router-dom';
 import ScrollableFeed from 'react-scrollable-feed';
 
+const socket = io('http://localhost:9001')
+
 const Game = () => {
     const [chat, setChat] = useState([])
     const tempState = useLocation().state;
@@ -17,20 +19,31 @@ const Game = () => {
     /**
      * Initializes connection with Socket.io server
      */
+    // socket.on("message", ({ name, message }) => {
+    //     console.log(name, message)
+    //     setChat([ ...chat, { name, message } ])
+    // })
+
+    // socket.on('successfulJoinGame', ({player, code}) => {
+    //     console.log('successful join game side at:', code)
+    //     if (code === gameCode) {
+    //         players.push(player);
+    //     }
+    // })
+
     useEffect(
 		() => {
-			socketRef.current = io.connect("http://localhost:9001")
-			socketRef.current.on("message", ({ name, message }) => {
-                console.log(name)
+			socket.on("message", ({ name, message }) => {
+                console.log(name, message)
 				setChat([ ...chat, { name, message } ])
 			})
-            socketRef.current.on('successfulJoin', ({player, code}) => {
+            
+            socket.on('successfulJoinGame', ({player, code}) => {
                 console.log('successful join game side at:', code)
                 if (code === gameCode) {
                     players.push(player);
                 }
             })
-			return () => socketRef.current.disconnect()
 		},
 		[ chat, players, gameCode ]
 	)
@@ -50,7 +63,7 @@ const Game = () => {
      */
     const sendMessage = (e) => {
         e.preventDefault();
-        socketRef.current.emit("message", {name: message.name, message: message.message})
+        socket.emit("message", {name: message.name, message: message.message})
         setMessage({ message: '', name: message.name })
     }
 
@@ -59,7 +72,6 @@ const Game = () => {
      * @returns {*} Chat container
      */
     const renderChat = () => {
-        console.log(chat)
 		return chat.map(({ name, message }, index) => (
 			<div key={index}>
                 {name}: <span>{message}</span>
