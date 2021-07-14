@@ -4,12 +4,11 @@ import { io } from 'socket.io-client'
 import { useLocation } from 'react-router-dom';
 import ScrollableFeed from 'react-scrollable-feed';
 
-const socket = io('http://localhost:9001')
+const socket = io('localhost:9001')
 
 const Game = () => {
     const [chat, setChat] = useState([])
     const tempState = useLocation().state;
-    const socketRef = useRef();
     const [message, setMessage] = useState({message: '', name: tempState.mainState.user.username});
     const gameCode = tempState.gameCode;
     const user = tempState.mainState.user;
@@ -37,7 +36,10 @@ const Game = () => {
                 console.log(name, message)
 				setChat([ ...chat, { name, message } ])
 			})
-            
+
+            socket.on('successfulJoin', ({code}) => {
+                console.log('successful Join code:', code)
+            })
             socket.on('successfulJoinGame', ({player, code}) => {
                 console.log('successful join game side at:', code)
                 if (code === gameCode) {

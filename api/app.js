@@ -61,17 +61,15 @@ io.on('connection', (socket) => {
 
   socket.on('joinGame', (state, gameCode) => {
     console.log(state.mainState.user.username + 'is attempting to join game')
-    if (io.sockets.adapter.rooms.has(gameCode)) { ioHelpers.joinGame(socket, state, gameCode) } 
+    if (io.sockets.adapter.rooms.has(gameCode)) { ioHelpers.joinGame(socket, state, gameCode, io) }
     else { ioHelpers.failedToJoin(socket, gameCode) }
   })
 
-  socket.on('createGame', () => {
-    ioHelpers.createGame(socket);
+  socket.on('createGame', (name) => {
+    ioHelpers.createGame(socket, name);
   })
 
 })
-io.on('error', ioHelpers.onError);
-io.on('listening', ioHelpers.onListening);
 
 //socket.io connections
 httpServer.listen(socketport, () => {

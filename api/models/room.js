@@ -7,6 +7,10 @@ const roomSchema = new Schema({
     gameCode: {
         type: String,
         required: true
+    },
+    players: {
+        type: [String],
+        required: true
     }
 });
 
